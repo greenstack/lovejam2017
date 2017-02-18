@@ -15,18 +15,14 @@ function setupMap()
   mapHeight = 40
   
   mapNodes = {}
-  map={}
   for x=1,mapWidth do
-    map[x] = {}
     for y=1, mapWidth do
 	  local n = {}
 	  n.x = x
 	  n.y = y
 	  n.type = 0
 	  n.tile = love.math.random(0,1)	
-      map[x][y] = n.tile;
 	  table.insert(mapNodes,n)
-      --mapNodes[x][y] = love.math.random(0,3)
     end
   end
 end
@@ -34,8 +30,8 @@ end
 function setupMapView()
   mapX = 1
   mapY = 1
-  tilesDisplayWidth = 26
-  tilesDisplayHeight = 20
+  tilesDisplayWidth = 30
+  tilesDisplayHeight = 24
 
   zoomX = 1
   zoomY = 1
@@ -83,7 +79,7 @@ function updateTilesetBatch()
   --end
   
   for k,v in pairs(mapNodes) do
-	if v.x > mapX and v.x < tilesDisplayWidth - 1 and v.y > mapY and v.y < tilesDisplayHeight - 1 then
+	if v.x >= mapX and v.x - mapX <= tilesDisplayWidth and v.y >= mapY and v.y - mapY <= tilesDisplayHeight then
 		tilesetBatch:add(tileQuads[v.tile],(v.x - mapX)*tileSize,(v.y - mapY)*tileSize)
 	end
   end
