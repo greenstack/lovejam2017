@@ -65,6 +65,7 @@ function moveMap(dx, dy)
   oldMapY = mapY
   mapX = math.max(math.min(mapX + dx, mapWidth - tilesDisplayWidth), 1)
   mapY = math.max(math.min(mapY + dy, mapHeight - tilesDisplayHeight), 1)
+  
   --only update if we actually moved
   if math.floor(mapX) ~= math.floor(oldMapX) or math.floor(mapY) ~= math.floor(oldMapY) then
     updateTilesetBatch()
@@ -80,10 +81,9 @@ function updateTilesetBatch()
   --end
   
   for k,v in pairs(mapNodes) do
-	if v.x < tilesDisplayWidth - 1 and v.y < tilesDisplayHeight - 1 then
+	if v.x < tilesDisplayWidth and v.y < tilesDisplayHeight then
 		tilesetBatch:add(tileQuads[v.tile],v.x*tileSize,v.y*tileSize)
 	end
-	
   end
   
   tilesetBatch:flush()
