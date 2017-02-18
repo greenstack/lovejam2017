@@ -1,2 +1,4 @@
 # Ignore temporary files that might show up from Krita
 *.*~
+todo.txt
+*.kra
