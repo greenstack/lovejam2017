@@ -25,9 +25,11 @@ function love.update(dt)
 end
 
 function love.draw()
+  love.graphics.setColor(255,255,255)
   love.graphics.draw(tilesetBatch,
-    math.floor(-(mapX%1)*tileSize), math.floor(-(mapY%1)*tileSize), 0, zoomX, zoomY
+    0,0, 0, zoomX, zoomY
   )
+  love.graphics.setColor(0,0,0)
   love.graphics.print("FPS: "..love.timer.getFPS(), 10, 20)
   love.graphics.print("MapX: "..mapX, 10, 30)
   love.graphics.print("MapY: "..mapY, 10, 40)

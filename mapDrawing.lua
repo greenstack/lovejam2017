@@ -90,9 +90,6 @@ function updateTilesetBatch()
 		tilesetBatch:add(tileQuads[v.tile],sp.x,sp.y)
 	end
 	
-	--if v.x >= mapX and v.x - mapX <= tilesDisplayWidth + 1 and v.y >= mapY and v.y - mapY <= tilesDisplayHeight then
-	--	tilesetBatch:add(tileQuads[v.tile],(v.x - mapX)*tileSize,(v.y - mapY)*tileSize)
-	--end
   end
   
   tilesetBatch:flush()
