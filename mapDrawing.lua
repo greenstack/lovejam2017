@@ -65,7 +65,7 @@ function setupTileSet()
   -- middle of red carpet
   tileQuads[3] = love.graphics.newQuad(3 * tileSize, 9 * tileSize, tileSize, tileSize, tilesetImage:getWidth(), tilesetImage:getHeight())
 
-  tilesetBatch = love.graphics.newSpriteBatch(tilesetImage, tilesDisplayWidth * tilesDisplayHeight)
+  tilesetBatch = love.graphics.newSpriteBatch(tilesetImage, (tilesDisplayWidth + 1) * (tilesDisplayHeight + 1))
 
   updateTilesetBatch()
 end
@@ -102,3 +102,12 @@ function worldToScreenPos(wx,wy,mx,my,scale)
 
 	return sp
 end
+
+function screenToWorldPos(sx,sy,mx,my,scale)
+	local wp = {}
+	wp.x = (sx / scale + mx)
+	wp.y = (sy / scale + my)
+
+	return sp
+end
+
