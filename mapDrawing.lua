@@ -16,12 +16,24 @@ function setupMap()
   
   mapNodes = {}
   for x=1,mapWidth do
-    for y=1, mapWidth do
+    for y=1, mapHeight do
 	  local n = {}
 	  n.x = x
 	  n.y = y
 	  n.type = 0
-	  n.tile = love.math.random(0,1)	
+	  n.tile = love.math.random(0,1)
+	  if x == 1 and y == 1 then
+		n.tile = 2
+	  end
+	  if x == 1 and y == 40 then
+		n.tile = 2
+	  end
+	  if x == 60 and y == 1 then
+		n.tile = 2
+	  end
+	  if x == 60 and y == 40 then
+		n.tile = 2
+	  end
 	  table.insert(mapNodes,n)
     end
   end
@@ -30,8 +42,8 @@ end
 function setupMapView()
   mapX = 1
   mapY = 1
-  tilesDisplayWidth = 30
-  tilesDisplayHeight = 24
+  tilesDisplayWidth = 26
+  tilesDisplayHeight = 22
 
   zoomX = 1
   zoomY = 1
@@ -61,28 +73,35 @@ end
 function moveMap(dx, dy)
   oldMapX = mapX
   oldMapY = mapY
-  mapX = math.max(math.min(mapX + dx, mapWidth - tilesDisplayWidth), 1)
-  mapY = math.max(math.min(mapY + dy, mapHeight - tilesDisplayHeight), 1)
+  mapX = math.max(math.min(mapX + dx, mapWidth - tilesDisplayWidth + 2), 1)
+  mapY = math.max(math.min(mapY + dy, mapHeight - tilesDisplayHeight + 2), 1)
   
-  --only update if we actually moved
-  if math.floor(mapX) ~= math.floor(oldMapX) or math.floor(mapY) ~= math.floor(oldMapY) then
-    updateTilesetBatch()
-  end
+  updateTilesetBatch()
+  
 end
 
 function updateTilesetBatch()
   tilesetBatch:clear()
-  --for x=0, tilesDisplayWidth-1 do
-  --  for y=0, tilesDisplayHeight-1 do
-  --    tilesetBatch:add(tileQuads[map[x+math.floor(mapX)][y+math.floor(mapY)]], x*tileSize, y*tileSize)
-  --  end
-  --end
+
   
   for k,v in pairs(mapNodes) do
-	if v.x >= mapX and v.x - mapX <= tilesDisplayWidth and v.y >= mapY and v.y - mapY <= tilesDisplayHeight then
-		tilesetBatch:add(tileQuads[v.tile],(v.x - mapX)*tileSize,(v.y - mapY)*tileSize)
+	local sp = worldToScreenPos(v.x,v.y,mapX,mapY,tileSize)
+	if sp.x >= -1 * tileSize and sp.x < tilesDisplayWidth * tileSize and sp.y >= -1 * tileSize and sp.y < tilesDisplayHeight * tileSize then
+		tilesetBatch:add(tileQuads[v.tile],sp.x,sp.y)
 	end
+	
+	--if v.x >= mapX and v.x - mapX <= tilesDisplayWidth + 1 and v.y >= mapY and v.y - mapY <= tilesDisplayHeight then
+	--	tilesetBatch:add(tileQuads[v.tile],(v.x - mapX)*tileSize,(v.y - mapY)*tileSize)
+	--end
   end
   
   tilesetBatch:flush()
+end
+
+function worldToScreenPos(wx,wy,mx,my,scale)
+	local sp = {}
+	sp.x = (wx - mx) * scale
+	sp.y = (wy - my) * scale
+
+	return sp
 end
