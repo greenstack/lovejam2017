@@ -1,6 +1,6 @@
 -- Contains the functions needed for map making and drawing
 
-local map -- stores tiledata
+local mapNodes -- stores tiledata
 local mapWidth, mapHeight -- width and height in tiles
 
 local tilesDisplayWidth, tilesDisplayHeight -- number of tiles to show
@@ -14,11 +14,17 @@ function setupMap()
   mapWidth = 60
   mapHeight = 40
   
-  map = {}
+  mapNodes = {}
   for x=1,mapWidth do
-    map[x] = {}
     for y=1, mapWidth do
-      map[x][y] = love.math.random(0,3)
+	  local n = {}
+	  n.x = x
+	  n.y = y
+	  n.type = 0
+	  n.tile = love.math.random(0,1)	
+	
+	  table.insert(mapNodes,n)
+      --mapNodes[x][y] = love.math.random(0,3)
     end
   end
 end
@@ -67,10 +73,18 @@ end
 
 function updateTilesetBatch()
   tilesetBatch:clear()
-  for x=0, tilesDisplayWidth-1 do
-    for y=0, tilesDisplayHeight-1 do
-      tilesetBatch:add(tileQuads[map[x+math.floor(mapX)][y+math.floor(mapY)]], x*tileSize, y*tileSize)
-    end
+  --for x=0, tilesDisplayWidth-1 do
+  --  for y=0, tilesDisplayHeight-1 do
+  --    tilesetBatch:add(tileQuads[map[x+math.floor(mapX)][y+math.floor(mapY)]], x*tileSize, y*tileSize)
+  --  end
+  --end
+  
+  for k,v in pairs(mapNodes) do
+	if v.x < tilesDisplayWidth - 1 and v.y < tilesDisplayHeight - 1 then
+		tilesetBatch:add(tileQuads[v.tile],v.x*tileSize,v.y*tileSize)
+	end
+	
   end
+  
   tilesetBatch:flush()
 end
