@@ -24,7 +24,7 @@ function setupMap()
 	  n.y = y
 	  n.type = 0
 	  n.tile = love.math.random(0,1)	
-    map[x][y] = n.tile;
+      map[x][y] = n.tile;
 	  table.insert(mapNodes,n)
       --mapNodes[x][y] = love.math.random(0,3)
     end
@@ -83,8 +83,8 @@ function updateTilesetBatch()
   --end
   
   for k,v in pairs(mapNodes) do
-	if v.x < tilesDisplayWidth - 1 and v.y < tilesDisplayHeight - 1 then
-		tilesetBatch:add(tileQuads[map[v.x+math.floor(mapX)][v.y+math.floor(mapY)]],v.x*tileSize,v.y*tileSize)
+	if v.x > mapX and v.x < tilesDisplayWidth - 1 and v.y > mapY and v.y < tilesDisplayHeight - 1 then
+		tilesetBatch:add(tileQuads[v.tile],(v.x - mapX)*tileSize,(v.y - mapY)*tileSize)
 	end
   end
   
