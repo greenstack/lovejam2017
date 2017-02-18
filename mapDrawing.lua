@@ -11,8 +11,8 @@ local tileQuads = {} -- parts of the tileset used for different tiles
 local tilesetSprite
 
 function setupMap() 
-  mapWidth = 60
-  mapHeight = 40
+  mapWidth = 25
+  mapHeight = 18
   
   mapNodes = {}
   for x=1,mapWidth do
@@ -20,19 +20,18 @@ function setupMap()
 	  local n = {}
 	  n.x = x
 	  n.y = y
-	  n.type = 0
-	  n.tile = love.math.random(0,1)
-	  if x == 1 and y == 1 then
+	  
+	  if love.math.random(0,5) > 0 then
+	    n.tile = 0
+		n.type = 0
+	  else
 		n.tile = 2
+		n.type = 1
 	  end
-	  if x == 1 and y == 40 then
+	  
+	  if x == 1 or x == mapWidth or y == 1 or y == mapHeight then
 		n.tile = 2
-	  end
-	  if x == 60 and y == 1 then
-		n.tile = 2
-	  end
-	  if x == 60 and y == 40 then
-		n.tile = 2
+		n.type = 1
 	  end
 	  table.insert(mapNodes,n)
     end
@@ -43,7 +42,7 @@ function setupMapView()
   mapX = 1
   mapY = 1
   tilesDisplayWidth = 26
-  tilesDisplayHeight = 22
+  tilesDisplayHeight = 21
 
   zoomX = 1
   zoomY = 1
@@ -70,11 +69,11 @@ function setupTileSet()
   updateTilesetBatch()
 end
 
-function moveMap(dx, dy)
-  oldMapX = mapX
-  oldMapY = mapY
-  mapX = math.max(math.min(mapX + dx, mapWidth - tilesDisplayWidth + 2), 1)
-  mapY = math.max(math.min(mapY + dy, mapHeight - tilesDisplayHeight + 2), 1)
+function moveMap()
+  local player = getPlayer()
+  local windowX,windowY = love.graphics.getDimensions()
+  mapX = math.max(math.min(player.x - windowX / (2 * tileSize), mapWidth - tilesDisplayWidth + 2), 1)
+  mapY = math.max(math.min(player.y - windowY / (2 * tileSize), mapHeight - tilesDisplayHeight + 4), 1)
   
   updateTilesetBatch()
   
@@ -95,6 +94,8 @@ function updateTilesetBatch()
   tilesetBatch:flush()
 end
 
+
+
 function worldToScreenPos(wx,wy,mx,my,scale)
 	local sp = {}
 	sp.x = (wx - mx) * scale
@@ -109,5 +110,9 @@ function screenToWorldPos(sx,sy,mx,my,scale)
 	wp.y = (sy / scale + my)
 
 	return sp
+end
+
+function getNodes()
+	return mapNodes
 end
 
