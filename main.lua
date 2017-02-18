@@ -1,27 +1,71 @@
 -- main.lua to test git
 
 require("mapDrawing")
+require("entityhandler")
+
+
 
 function love.load()
   setupMap()
   setupMapView()
   setupTileSet()
   -- love.graphics.setFont(12)
+  local initialPlayerPos = {}
+  initialPlayerPos.x = 5
+  initialPlayerPos.y = 5
+  
+  initEntityHandler(initialPlayerPos)
+  
+  local f = love.filesystem.newFile("init.txt")
+  f:open("w")
+  f:write("hey" .. "\r\n")
+  f:close()
+  
+  
 end
 
 function love.update(dt)
-  if love.keyboard.isDown("up") then
-    moveMap(0, -0.2 * tileSize * dt)
+  local playerSpeed = getPlayer().speed
+  if up then
+    --moveMap(0, -0.2 * tileSize * dt)
+	movePlayer(0, -1 * playerSpeed * tileSize * dt)
   end
-  if love.keyboard.isDown("down") then
-    moveMap(0, 0.2 * tileSize * dt)
+  if down then
+    movePlayer(0, playerSpeed * tileSize * dt)
   end
-  if love.keyboard.isDown("left") then
-    moveMap(-0.2 * tileSize * dt ,0)
+  if left then
+    movePlayer(-1 * playerSpeed * tileSize * dt, 0)
   end
-  if love.keyboard.isDown("right") then
-    moveMap(0.2 * tileSize * dt, 0)
+  if right then
+    movePlayer(playerSpeed * tileSize * dt, 0)
   end
+  moveMap()
+  updateEntities(dt)
+ 
+end
+
+function love.keypressed(key,scancode,isrepeat)
+	if key == "up" then
+		up = true
+	elseif key == "down" then
+		down = true
+	elseif key == "left" then
+		left = true
+	elseif key == "right" then
+		right = true
+	end
+end
+
+function love.keyreleased(key,scancode)
+	if key == "up" then
+		up = false
+	elseif key == "down" then
+		down = false
+	elseif key == "left" then
+		left = false
+	elseif key == "right" then
+		right = false
+	end
 end
 
 function love.draw()
@@ -29,8 +73,30 @@ function love.draw()
   love.graphics.draw(tilesetBatch,
     0,0, 0, zoomX, zoomY
   )
+  
+  local player = getPlayer()
+  local playerScreenPos = worldToScreenPos(player.x,player.y,mapX,mapY,tileSize)
   love.graphics.setColor(0,0,0)
   love.graphics.print("FPS: "..love.timer.getFPS(), 10, 20)
   love.graphics.print("MapX: "..mapX, 10, 30)
   love.graphics.print("MapY: "..mapY, 10, 40)
+  love.graphics.print("PlayerNode: (" .. getPlayer().nodeX .. "," .. getPlayer().nodeY .. ")")
+  
+  love.graphics.setColor(200,200,200,100)
+  local visibleNodes = getVisibleNodes()
+  for k,v in pairs(visibleNodes) do
+    local sp = worldToScreenPos(v.x + .5,v.y + .5,mapX,mapY,tileSize)
+	love.graphics.circle("fill",sp.x,sp.y,3)
+  end
+  
+  love.graphics.setColor(200,80,40)
+  love.graphics.circle("fill",playerScreenPos.x, playerScreenPos.y,10)
+  
+end
+
+function love.threaderror(thread,err)
+	local f = love.filesystem.newFile("threaderr.txt")
+	f:open("w")
+	f:write(err .. "\r\n")
+	f:close()
 end
