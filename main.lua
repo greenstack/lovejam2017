@@ -73,6 +73,8 @@ function love.draw()
   love.graphics.draw(tilesetBatch,
     0,0, 0, zoomX, zoomY
   )
+  love.graphics.draw(blockingTilesetBatch, 0,0,0, zoomX, zoomY)
+  love.graphics.draw(decorationTilesetBatch, 0,0,0, zoomX, zoomY)
   
   local player = getPlayer()
   local playerScreenPos = worldToScreenPos(player.x,player.y,mapX,mapY,tileSize)
