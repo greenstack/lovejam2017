@@ -21,7 +21,6 @@ end
 function love.update(dt)
   local playerSpeed = getPlayer().speed
   if up then
-    --moveMap(0, -0.2 * tileSize * dt)
 	movePlayer(0, -1 * playerSpeed * tileSize * dt)
   end
   if down then
