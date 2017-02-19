@@ -1,5 +1,5 @@
 require("gameutils")
-
+require("spriteManager")
 local entities = {}
 local player = {}
 local companion = {}
@@ -25,7 +25,8 @@ function initEntityHandler(initialPlayerPos)
 	player.speed = .2
 	player.width = 16
 	player.height = 16
-	
+	player.direction = dFront
+
 	local node = isOnNode(getNodes(),player)
 	player.nodeX = node.x
 	player.nodeY = node.y
