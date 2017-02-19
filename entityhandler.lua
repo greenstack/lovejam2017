@@ -130,7 +130,7 @@ function updateEntities(dt)
 		local eVisibleCount = 0
 		local nodes = getNodes()
 		for k,v in pairs(nodes) do
-			if distance(v,player) < 8 then
+			if distance(v,player) < 14 then
 				local hidden = false
 				for k2,v2 in pairs(visibleNodes) do
 					if v.x == v2.x and v.y == v2.y then
@@ -150,7 +150,7 @@ function updateEntities(dt)
 			end
 		end
 		
-		if eHiddenCount > 0 then
+		if eHiddenCount > 0 or math.random(0,3) == 3 then
 			nPathfindTo = eHiddenNodes[math.random(1,eHiddenCount)]
 		elseif eVisibleCount > 0 then
 			nPathfindTo = eVisibleNodes[math.random(1,eVisibleCount)]
