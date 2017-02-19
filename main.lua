@@ -93,18 +93,18 @@ function love.draw()
   local companionScreenPos = worldToScreenPos(companion.x,companion.y,mapX,mapY,tileSize)
   love.graphics.setColor(0,0,0)
   love.graphics.print("FPS: "..love.timer.getFPS(), 10, 20)
-  love.graphics.print("MapX: "..mapX, 10, 30)
-  love.graphics.print("MapY: "..mapY, 10, 40)
-  love.graphics.print("PlayerNode: (" .. getPlayer().nodeX .. "," .. getPlayer().nodeY .. ")", 10, 50)
-  love.graphics.print("Tile ID: ".. isOnNode(getNodes(),player).tile, 10,60)
-  love.graphics.print("Node Type: "..isOnNode(getNodes(), player).type, 10,70)
-  love.graphics.print("PlayerIceCream: "..tostring(player.iceCream), 10, 80)
+  --love.graphics.print("MapX: "..mapX, 10, 30)
+  --love.graphics.print("MapY: "..mapY, 10, 40)
+  love.graphics.print("PlayerNode: (" .. getPlayer().nodeX .. "," .. getPlayer().nodeY .. ")", 10, 30)
+  --love.graphics.print("Tile ID: ".. isOnNode(getNodes(),player).tile, 10,60)
+  --love.graphics.print("Node Type: "..isOnNode(getNodes(), player).type, 10,70)
+  --love.graphics.print("PlayerIceCream: "..tostring(player.iceCream), 10, 80)
   love.graphics.setColor(200,200,200,100)
   local visibleNodes = getVisibleNodes()
-  for k,v in pairs(visibleNodes) do
-    local sp = worldToScreenPos(v.x + .5,v.y + .5,mapX,mapY,tileSize)
-	  love.graphics.circle("fill",sp.x,sp.y,3)
-  end
+  --for k,v in pairs(visibleNodes) do
+  --  local sp = worldToScreenPos(v.x + .5,v.y + .5,mapX,mapY,tileSize)
+	--  love.graphics.circle("fill",sp.x,sp.y,3)
+  --end
   love.graphics.reset()
   local entityHitboxOffsetX = 10
   local entityHitboxOffsetY = 15

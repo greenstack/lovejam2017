@@ -65,8 +65,18 @@ function initEntityHandler(initialPlayerPos, level)
     complete = shop,
     progress = 0,
     duration = 3,
-    range = 1
+    range = 1.5
 	}
+  
+  entities['companion'] = {
+    x = companion.x,
+    y = companion.y,
+    interact = bubble,
+    complete = feedCompanion,
+    progress = 0,
+    duration = 1,
+    range = 1.5
+  }
 
 end
 
@@ -223,7 +233,7 @@ function updateEntities(dt, isSpacePressed)
 		f:close()
 	end
 	
-	if companionPath[companionPath.head] then
+	if companionPath[companionPath.head] and entities['companion'].progress == 0 then
 		--move towards companionPath[companionPath.head]
 		local tNode = companionPath[companionPath.head]
 		local dx = tNode.x - (companion.x - .5)
@@ -282,7 +292,8 @@ function updateEntities(dt, isSpacePressed)
 		sightPlayerNodeChannel:push(playerNode)
 		sightNodesChannel:push(getNodes())
 	end
-
+  entities['companion'].x = companion.x
+  entities['companion'].y = companion.y
 	updateNonCompanionEntities(dt, isSpacePressed)
 end
 
@@ -291,6 +302,7 @@ function updateNonCompanionEntities(dt, isSpacePressed)
 		for k,v in pairs(entities) do
       if(distance(v,player) < v.range) then
         v.interact(v,level,dt)
+        break
       end
 		end  
   else
@@ -301,13 +313,19 @@ function updateNonCompanionEntities(dt, isSpacePressed)
   
   if next(interaction) then
     if not space and not interaction.complete then
-      interaction.progress = math.max(interaction.progress - 3 * dt)
+      interaction.progress = math.max(0,interaction.progress - 3 * dt)
     end
     interaction.delay = math.max(0,interaction.delay - dt)
     if interaction.delay <= 0 then
       interaction = {}
     end
   end
+  
+  -- handle contacts
+  
+  
+
+  
   
 end
 
@@ -316,15 +334,18 @@ function getVisibleNodes()
 end
 
 function bubble(entity,level,dt)
-  entity.progress = entity.progress + dt
-  if entity.progress >= entity.duration and not interaction.complete then
-    interaction.success = entity.complete(level)
-    interaction.complete = true
-  end
+  if not interaction.complete then
+    entity.progress = entity.progress + dt
+    if entity.progress >= entity.duration then
+      interaction.success = entity.complete(level)
+      interaction.complete = true
+    end
+  
   interaction.entity = entity
   interaction.progress = entity.progress
   interaction.duration = entity.duration
   interaction.delay = 1
+  end
 end
 
 function shop(level)
@@ -334,5 +355,15 @@ function shop(level)
     player.cash = player.cash - iceCreamCost
     return true
   end
+  return false
+end
+
+function feedCompanion(level)
+  if player.iceCream then
+    player.iceCream = false
+    companion.timer = math.max(10, 20 - level)
+    return true
+  end
+  companion.timer = 0
   return false
 end
