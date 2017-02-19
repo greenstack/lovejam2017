@@ -76,6 +76,8 @@ function love.draw()
   
   local player = getPlayer()
   local playerScreenPos = worldToScreenPos(player.x,player.y,mapX,mapY,tileSize)
+  local companion = getCompanion()
+  local companionScreenPos = worldToScreenPos(companion.x,companion.y,mapX,mapY,tileSize)
   love.graphics.setColor(0,0,0)
   love.graphics.print("FPS: "..love.timer.getFPS(), 10, 20)
   love.graphics.print("MapX: "..mapX, 10, 30)
@@ -90,8 +92,10 @@ function love.draw()
 	love.graphics.circle("fill",sp.x,sp.y,3)
   end
   
-  love.graphics.setColor(200,80,40)
+  love.graphics.setColor(200,80,40) -- the player's dot
   love.graphics.circle("fill",playerScreenPos.x, playerScreenPos.y,8)
+  love.graphics.setColor(100,180,80) -- the companion's dot
+  love.graphics.circle("fill",companionScreenPos.x, companionScreenPos.y,8)
   
 end
 

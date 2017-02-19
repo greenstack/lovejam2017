@@ -30,6 +30,11 @@ function initEntityHandler(initialPlayerPos)
 	player.nodeX = node.x
 	player.nodeY = node.y
 	
+	companion.x = initialPlayerPos.x + .5 - 1
+	companion.y = initialPlayerPos.y + .5
+	companion.speed = .2	
+	companion.timer = 0
+	
 	sightPlayerNodeChannel = love.thread.getChannel("sightPlayerChan")
 	sightNodesChannel = love.thread.getChannel("sightNodesChan")
 	sightVisibleNodes = love.thread.getChannel("sightVisibleChan")
@@ -57,7 +62,7 @@ function getPlayer()
 	return player
 end
 
-function getCompainion()
+function getCompanion()
 	return companion
 end
 
@@ -115,13 +120,52 @@ function updateEntities(dt)
 	
 	
 	--also handle companion AI
+	companion.timer = companion.timer - dt
+	if companion.timer <= 0 then -- find new place to wander
+		companion.timer = math.random(3,7)
+		local nPathfindTo = {}
+		local eHiddenNodes = {}
+		local eHiddenCount = 0
+		local eVisibleNodes = {}
+		local eVisibleCount
+		local nodes = getNodes()
+		for k,v in pairs(nodes) do
+			if distance(v,player) < 10 then
+				if not elementOf(visibleNodes, v) then
+					table.insert(eHiddenNodes,v)
+					eHiddenCount = eHiddenCount + 1
+				else
+					table.insert(eVisibleNodes,v)
+					eVisibleCount = eVisibleCount + 1
+				end
+			end
+		end
+		
+		if eHiddenCount > 0 then
+			nPathfindTo = eHiddenNodes[math.random(1,eHiddenCount)]
+		elseif eVisibleCount > 0 then
+			nPathfindTo = eVisibleNodes[math.random(1,eVisibleCount)]
+		end
+		
+			local f = love.filesystem.newFile("companion.txt")
+			f:open("w")
+			f:write(nodeToString(nPathfindTo) .. "\r\n")
+			f:close()
+			
+		if next(nPathfindTo) then -- companion has found a new place he wants to be...
+			
+		end
+			
+	end
+		
 	
-	
+	--handle line-of-sight calculation results
 	if sightVisibleNodes:getCount() > 0 then
 		visibleNodes = sightVisibleNodes:pop()
 		sightVisibleNodes:clear()
 	end
 	
+	--spin up a new thread for sight calculations if needed
 	if newSightNeeded then
 		newSightNeeded = false
 		sightPlayerNodeChannel:clear()
