@@ -35,7 +35,7 @@ function drawUI()
   love.graphics.setColor(0,0,0)
   love.graphics.rectangle("fill",304,windowY - 26,140,20,10,10)
   love.graphics.setColor(240, 240, 240)
-  love.graphics.print("Allowance: $" .. "20",318,windowY - 23) --getPlayer().cash
+  love.graphics.print("Allowance: $" .. getPlayer().cash,318,windowY - 23) --getPlayer().cash
 end
 
 function updateUI()
