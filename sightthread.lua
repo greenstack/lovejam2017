@@ -19,7 +19,7 @@ function getVisibleNodes(playerNode, nodes)
 	local visibleNodes = {}
 
 	local totalRays = 100
-	local dTheta = 360 / 100
+	local dTheta = 360 / 150
 	local rayNumber = 1
 	
 	--f = love.filesystem.newFile("sightlog.txt")
