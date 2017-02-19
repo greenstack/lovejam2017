@@ -80,7 +80,7 @@ function love.draw()
   love.graphics.print("FPS: "..love.timer.getFPS(), 10, 20)
   love.graphics.print("MapX: "..mapX, 10, 30)
   love.graphics.print("MapY: "..mapY, 10, 40)
-  love.graphics.print("PlayerNode: (" .. getPlayer().nodeX .. "," .. getPlayer().nodeY .. ")")
+  love.graphics.print("PlayerNode: (" .. getPlayer().nodeX .. "," .. getPlayer().nodeY .. ")",10,10)
   
   love.graphics.setColor(200,200,200,100)
   local visibleNodes = getVisibleNodes()
@@ -90,7 +90,7 @@ function love.draw()
   end
   
   love.graphics.setColor(200,80,40)
-  love.graphics.circle("fill",playerScreenPos.x, playerScreenPos.y,10)
+  love.graphics.circle("fill",playerScreenPos.x, playerScreenPos.y,8)
   
 end
 
