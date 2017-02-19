@@ -115,6 +115,22 @@ function movePlayer(dx,dy)
 end
 
 function updateEntities(dt)
+
+	local los = false
+	local cNode = isOnNode(getNodes(),companion)
+	for k,v in pairs(visibleNodes) do
+		if cNode.x == v.x and cNode.y == v.y then
+			los = true
+			break
+		else
+			los = false
+		end
+	end
+	if los then
+		obedience_meter = math.min(100,obedience_meter + 1 * dt)
+	else
+		obedience_meter = math.max(0,obedience_meter - 10 * dt)
+	end
 	
 	--also handle companion AI
 	companion.timer = companion.timer - dt
