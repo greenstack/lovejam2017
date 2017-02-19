@@ -26,13 +26,15 @@ local pathThread
 
 local companionPath = {}
 
-function initEntityHandler(initialPlayerPos)
+function initEntityHandler(initialPlayerPos, level)
 	player.x = initialPlayerPos.x + .5
 	player.y = initialPlayerPos.y + .5
 	player.speed = .2
 	player.width = 16
 	player.height = 16
 	player.direction = dFront
+	player.iceCream = false
+	player.cash = 25
 
 	local node = isOnNode(getNodes(),player)
 	player.nodeX = node.x
@@ -53,7 +55,12 @@ function initEntityHandler(initialPlayerPos)
 	pathFinalPathChannel = love.thread.getChannel("finalPathChan")
 	pathNodesChannel = love.thread.getChannel("nodesChan")
 	pathThread = love.thread.newThread("pathfindthread.lua")
-	
+
+	entities['shop'] = {
+		x = 5,
+		y = 15
+	}
+
 end
 
 function isOnNode(nodes,entity)
@@ -114,7 +121,7 @@ function movePlayer(dx,dy)
 	end
 end
 
-function updateEntities(dt)
+function updateEntities(dt, isSpacePressed)
 
 	local los = false
 	local cNode = isOnNode(getNodes(),companion)
@@ -262,8 +269,26 @@ function updateEntities(dt)
 		sightPlayerNodeChannel:push(playerNode)
 		sightNodesChannel:push(getNodes())
 	end
+
+	updateNonCompanionEntities(dt, isSpacePressed)
+end
+
+function updateNonCompanionEntities(dt, isSpacePressed)
+	if isSpacePressed == true then
+		for k,v in pairs(entities) do
+			if k == "shop" then
+				shop(level)
+			end
+		end
+	end
 end
 
 function getVisibleNodes()
 	return visibleNodes
+end
+
+function shop(level)
+	local iceCreamCost = 3 + level * 2
+	player.iceCream = true
+	player.cash = player.cash - iceCreamCost
 end

@@ -9,6 +9,7 @@ obedience_meter = 100
 lose = false
 
 function love.load()
+  level = 1
   setupMap()
   setupMapView()
   setupTileSet()
@@ -40,12 +41,14 @@ function love.update(dt)
 	player.direction = dRight
   end
   moveMap()
-  updateEntities(dt)
+  updateEntities(dt, space)
 end
 
 function love.keypressed(key,scancode,isrepeat)
   player = getPlayer()
-	if key == "up" then
+  if key == "space" then
+    space = true
+	elseif key == "up" then
 		up = true
 	elseif key == "down" then
 		down = true
@@ -57,7 +60,9 @@ function love.keypressed(key,scancode,isrepeat)
 end
 
 function love.keyreleased(key,scancode)
-	if key == "up" then
+  if key == "space" then
+    up = false
+	elseif key == "up" then
 		up = false
 	elseif key == "down" then
 		down = false
@@ -87,6 +92,7 @@ function love.draw()
   love.graphics.print("PlayerNode: (" .. getPlayer().nodeX .. "," .. getPlayer().nodeY .. ")", 10, 50)
   love.graphics.print("Tile ID: ".. isOnNode(getNodes(),player).tile, 10,60)
   love.graphics.print("Node Type: "..isOnNode(getNodes(), player).type, 10,70)
+  love.graphics.print("PlayerIceCream: "..tostring(player.iceCream), 10, 80)
   love.graphics.setColor(200,200,200,100)
   local visibleNodes = getVisibleNodes()
   for k,v in pairs(visibleNodes) do
