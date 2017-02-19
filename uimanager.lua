@@ -38,7 +38,36 @@ function drawUI()
   love.graphics.print("Allowance: $" .. getPlayer().cash,318,windowY - 23) --getPlayer().cash
   
   if next(getInteraction()) then
-    love.graphics.arc("fill",200,200,50,0, (getInteraction().progress / getInteraction().duration ) * (2 * math.pi))
+    local interaction = getInteraction()
+    local screenPos = worldToScreenPos(interaction.entity.x,interaction.entity.y,mapX,mapY,tileSize)
+    local ix = screenPos.x
+    local iy = screenPos.y
+    
+    local bubbleWidth = 128
+    local bubbleHeight = 60
+    local borderWidth = 3
+    local pieRadius = 20
+    local verticalBuffer = 30
+    
+    love.graphics.setColor(153, 204, 255)
+    love.graphics.rectangle("fill",ix - borderWidth,iy - bubbleHeight - borderWidth - verticalBuffer,bubbleWidth + borderWidth,bubbleHeight + borderWidth,15,15)
+    love.graphics.setColor(245,245,245)
+    love.graphics.rectangle("fill",ix,iy - bubbleHeight - verticalBuffer,bubbleWidth - borderWidth,bubbleHeight - borderWidth,15,15)
+    
+    love.graphics.setColor(0,0,0)
+    love.graphics.circle("fill",ix + bubbleWidth / 4, iy - bubbleHeight / 2 - verticalBuffer - 2,pieRadius + borderWidth)
+    if interaction.complete then
+      if interaction.success then
+        love.graphics.setColor(103, 204, 105)
+      else
+        love.graphics.setColor(230, 46, 0)
+      end
+    else
+      love.graphics.setColor(153, 204, 255)
+    end
+    love.graphics.arc("fill",ix + bubbleWidth / 4, iy - bubbleHeight / 2 - verticalBuffer - 2,pieRadius,0, (getInteraction().progress / getInteraction().duration ) * (2 * math.pi))
+  
+    
   end
 end
 

@@ -27,19 +27,19 @@ end
 function love.update(dt)
   if not lose then
 	  local playerSpeed = getPlayer().speed
-	  if up then
+	  if up and not space then
 		movePlayer(0, -1 * playerSpeed * tileSize * dt)
 		player.direction = dBack
 	  end
-	  if down then
+	  if down and not space then
 		movePlayer(0, playerSpeed * tileSize * dt)
 		player.direction = dFront
 	  end
-	  if left then
+	  if left and not space then
 		movePlayer(-1 * playerSpeed * tileSize * dt, 0)
 		player.direction = dLeft
 	  end
-	  if right then
+	  if right and not space then
 		movePlayer(playerSpeed * tileSize * dt, 0)
 		player.direction = dRight
 	  end
@@ -54,13 +54,13 @@ function love.keypressed(key,scancode,isrepeat)
   player = getPlayer()
   if key == "space" then
     space = true
-	elseif key == "up" then
+	elseif key == "w" then
 		up = true
-	elseif key == "down" then
+	elseif key == "s" then
 		down = true
-	elseif key == "left" then
+	elseif key == "a" then
 		left = true
-	elseif key == "right" then
+	elseif key == "d" then
 		right = true
 	end
 end
@@ -68,13 +68,13 @@ end
 function love.keyreleased(key,scancode)
   if key == "space" then
     space = false
-	elseif key == "up" then
+	elseif key == "w" then
 		up = false
-	elseif key == "down" then
+	elseif key == "s" then
 		down = false
-	elseif key == "left" then
+	elseif key == "a" then
 		left = false
-	elseif key == "right" then
+	elseif key == "d" then
 		right = false
 	end
 end

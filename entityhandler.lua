@@ -14,15 +14,15 @@ entity.dir = 0
 local newSightNeeded = true
 local visibleNodes = {}
 
-local sightPlayerNodeChannel
-local sightNodesChannel
-local sightVisibleNodes
-local sightThread
+local sightPlayerNodeChannel = nil
+local sightNodesChannel = nil
+local sightVisibleNodes = nil
+local sightThread = nil
 
-local pathTargetChannel
-local pathFinalPathChannel
-local pathNodesChannel
-local pathThread
+local pathTargetChannel = nil
+local pathFinalPathChannel = nil
+local pathNodesChannel = nil
+local pathThread = nil
 
 local companionPath = {}
 
@@ -36,7 +36,7 @@ function initEntityHandler(initialPlayerPos, level)
 	player.height = 16
 	player.direction = dFront
 	player.iceCream = false
-	player.cash = 25
+	player.cash = 5
 
 	local node = isOnNode(getNodes(),player)
 	player.nodeX = node.x
@@ -147,13 +147,13 @@ function updateEntities(dt, isSpacePressed)
 	if los then
 		obedience_meter = math.min(100,obedience_meter + 1 * dt)
 	else
-		obedience_meter = math.max(0,obedience_meter - 10 * dt)
+		obedience_meter = math.max(0,obedience_meter - 1 * dt)
 	end
 	
 	--also handle companion AI
 	companion.timer = companion.timer - dt
 	if companion.timer <= 0 then -- find new place to wander
-		companion.timer = math.random(4,8)
+		companion.timer = math.random(3,5)
 		local nPathfindTo = {}
 		local eHiddenNodes = {}
 		local eHiddenCount = 0
@@ -300,6 +300,9 @@ function updateNonCompanionEntities(dt, isSpacePressed)
   end
   
   if next(interaction) then
+    if not space and not interaction.complete then
+      interaction.progress = math.max(interaction.progress - 3 * dt)
+    end
     interaction.delay = math.max(0,interaction.delay - dt)
     if interaction.delay <= 0 then
       interaction = {}
@@ -314,8 +317,8 @@ end
 
 function bubble(entity,level,dt)
   entity.progress = entity.progress + dt
-  if entity.progress >= entity.duration then
-    entity.complete(level)
+  if entity.progress >= entity.duration and not interaction.complete then
+    interaction.success = entity.complete(level)
     interaction.complete = true
   end
   interaction.entity = entity
@@ -329,5 +332,7 @@ function shop(level)
   if iceCreamCost <= player.cash then
     player.iceCream = true
     player.cash = player.cash - iceCreamCost
+    return true
   end
+  return false
 end
