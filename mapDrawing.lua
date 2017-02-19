@@ -4,7 +4,6 @@ local mapNodes -- stores tiledata
 local mapWidth, mapHeight -- width and height in tiles
 
 local tilesDisplayWidth, tilesDisplayHeight -- number of tiles to show
-local zoomX, zoomY
 
 local tilesetImage
 local tileQuads = {} -- parts of the tileset used for different tiles
@@ -17,7 +16,11 @@ function setupMap()
   mapHeight = mapInfo.height
   
   mapNodes = {}
+  blockingMap={}
+  decorationMap={}
   for y=1, mapHeight do
+    decorationMap[y] = {}
+    blockingMap[y] = {}
     for x=1, mapWidth do
 	  local n = {}
 	  n.x = x
@@ -28,14 +31,18 @@ function setupMap()
     local groundLayer = 1
 	  local blockingLayer = 2
     local decorationLayer = 3
+    n.tile = mapInfo.layers[groundLayer].data[tileCode]
 	  if  mapInfo.layers[blockingLayer].data[tileCode] > 0 then
-      n.tile = mapInfo.layers[blockingLayer].data[tileCode]
+      blockingMap[y][x] = mapInfo.layers[blockingLayer].data[tileCode]
       n.type = 1
     else
       n.tile = mapInfo.layers[groundLayer].data[tileCode]
       n.type = 0
 	  end
-	  
+	  if mapInfo.layers[decorationLayer].data[tileCode] > 0 then
+      decorationMap[y][x] = mapInfo.layers[decorationLayer].data[tileCode]
+    end
+
 	  table.insert(mapNodes,n)
     end
   end
@@ -46,7 +53,6 @@ function setupMapView()
   mapY = 1
   tilesDisplayWidth = 26
   tilesDisplayHeight = 21
-
   zoomX = 1
   zoomY = 1
 end
@@ -65,7 +71,8 @@ function setupTileSet()
   end
 
   tilesetBatch = love.graphics.newSpriteBatch(tilesetImage, (tilesDisplayWidth + 1) * (tilesDisplayHeight + 1))
-
+  blockingTilesetBatch = love.graphics.newSpriteBatch(tilesetImage, (tilesDisplayWidth + 1) * (tilesDisplayHeight + 1))
+  decorationTilesetBatch = love.graphics.newSpriteBatch(tilesetImage, (tilesDisplayWidth + 1) * (tilesDisplayHeight + 1))
   updateTilesetBatch()
 end
 
@@ -84,10 +91,34 @@ function updateTilesetBatch()
   for k,v in pairs(mapNodes) do
     local sp = worldToScreenPos(v.x,v.y,mapX,mapY,tileSize)
     if sp.x >= -1 * tileSize and sp.x < tilesDisplayWidth * tileSize and sp.y >= -1 * tileSize and sp.y < tilesDisplayHeight * tileSize then
-      tilesetBatch:add(tileQuads[v.tile],sp.x,sp.y)
+      if tileQuads[v.tile] ~= nil then
+        tilesetBatch:add(tileQuads[v.tile],sp.x,sp.y)
+      end
   	end	
   end
   tilesetBatch:flush()
+
+  blockingTilesetBatch:clear()
+  for k,v in pairs(mapNodes) do
+    local sp=worldToScreenPos(v.x,v.y,mapX,mapY,tileSize)
+    if sp.x >= -1 * tileSize and sp.x < tilesDisplayWidth * tileSize and sp.y >= -1 * tileSize and sp.y < tilesDisplayHeight * tileSize then
+      if tileQuads[blockingMap[v.y][v.x]] ~= nil then
+        blockingTilesetBatch:add(tileQuads[blockingMap[v.y][v.x]],sp.x,sp.y)
+      end
+  	end
+  end
+  blockingTilesetBatch:flush()
+
+  decorationTilesetBatch:clear()
+  for k,v in pairs(mapNodes) do
+    local sp=worldToScreenPos(v.x,v.y,mapX,mapY,tileSize)
+    if sp.x >= -1 * tileSize and sp.x < tilesDisplayWidth * tileSize and sp.y >= -1 * tileSize and sp.y < tilesDisplayHeight * tileSize then
+      if tileQuads[decorationMap[v.y][v.x]] ~= nil then
+        decorationTilesetBatch:add(tileQuads[decorationMap[v.y][v.x]],sp.x,sp.y)
+      end
+  	end
+  end
+  decorationTilesetBatch:flush()
 end
 
 function worldToScreenPos(wx,wy,mx,my,scale)

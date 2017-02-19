@@ -2,7 +2,7 @@
 
 require("mapDrawing")
 require("entityhandler")
-
+require("spriteManager")
 
 
 function love.load()
@@ -14,8 +14,8 @@ function love.load()
   initialPlayerPos.x = 5
   initialPlayerPos.y = 5
   
-  initEntityHandler(initialPlayerPos)  
-  
+  initEntityHandler(initialPlayerPos)
+  setupCharacterSprites()
 end
 
 function love.update(dt)
@@ -35,18 +35,22 @@ function love.update(dt)
   end
   moveMap()
   updateEntities(dt)
- 
 end
 
 function love.keypressed(key,scancode,isrepeat)
+  player = getPlayer()
 	if key == "up" then
 		up = true
+    player.direction = dBack
 	elseif key == "down" then
 		down = true
+    player.direction = dFront
 	elseif key == "left" then
 		left = true
+    player.direction = dLeft
 	elseif key == "right" then
 		right = true
+    player.direction = dRight
 	end
 end
 
@@ -63,10 +67,12 @@ function love.keyreleased(key,scancode)
 end
 
 function love.draw()
-  love.graphics.setColor(255,255,255)
+  love.graphics.setColor(255,255,255,255)
   love.graphics.draw(tilesetBatch,
     0,0, 0, zoomX, zoomY
   )
+  love.graphics.draw(blockingTilesetBatch, 0,0,0, zoomX, zoomY)
+  love.graphics.draw(decorationTilesetBatch, 0,0,0, zoomX, zoomY)
   
   local player = getPlayer()
   local playerScreenPos = worldToScreenPos(player.x,player.y,mapX,mapY,tileSize)
@@ -85,11 +91,11 @@ function love.draw()
     local sp = worldToScreenPos(v.x + .5,v.y + .5,mapX,mapY,tileSize)
 	love.graphics.circle("fill",sp.x,sp.y,3)
   end
-  
-  love.graphics.setColor(200,80,40) -- the player's dot
-  love.graphics.circle("fill",playerScreenPos.x, playerScreenPos.y,8)
+  love.graphics.reset()
+  love.graphics.draw(characterSetImage, characterQuads[playerQPos][player.direction], playerScreenPos.x - 10, playerScreenPos.y - 15, 0, 1.5, 1.5)
   love.graphics.setColor(100,180,80) -- the companion's dot
   love.graphics.circle("fill",companionScreenPos.x, companionScreenPos.y,8)
+
   
 end
 
