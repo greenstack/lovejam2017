@@ -19,7 +19,7 @@ function setupCharacterSprites()
   for i=1, charCount do
     characterQuads[i] = {}
     for j=0, stills - 1 do
-      characterQuads[i][j] = love.graphics.newQuad(j*12, (i-1)*characterSizeY, characterSizeX, characterSizeY, characterSetImage:getWidth(), characterSetImage:getHeight())
+      characterQuads[i][j] = love.graphics.newQuad(j*12, (i-1)*characterSizeY+1, characterSizeX, characterSizeY, characterSetImage:getWidth(), characterSetImage:getHeight())
     end
   end
 end
