@@ -67,7 +67,7 @@ end
 
 function love.keyreleased(key,scancode)
   if key == "space" then
-    up = false
+    space = false
 	elseif key == "up" then
 		up = false
 	elseif key == "down" then

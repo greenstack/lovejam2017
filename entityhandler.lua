@@ -26,6 +26,8 @@ local pathThread
 
 local companionPath = {}
 
+local interaction = {}
+
 function initEntityHandler(initialPlayerPos, level)
 	player.x = initialPlayerPos.x + .5
 	player.y = initialPlayerPos.y + .5
@@ -58,7 +60,12 @@ function initEntityHandler(initialPlayerPos, level)
 
 	entities['shop'] = {
 		x = 5,
-		y = 15
+		y = 16,
+    interact = bubble,
+    complete = shop,
+    progress = 0,
+    duration = 3,
+    range = 1
 	}
 
 end
@@ -85,6 +92,10 @@ end
 
 function getCompanion()
 	return companion
+end
+
+function getInteraction()
+  return interaction
 end
 
 function movePlayer(dx,dy)
@@ -243,11 +254,13 @@ function updateEntities(dt, isSpacePressed)
 		
 		local dis = distance(companionGridPos,tNode)
 		
+    -- then check if the node you're on is companionPath[companionPath.head]
+		-- if so decrement companionPath.head
+    
 		if dis < .1 then
 			companionPath.head = companionPath.head - 1
 		end
-		--then check if the node you're on is companionPath[companionPath.head]
-		-- if so decrement companionPath.head
+		
 		
 	end
 	
@@ -276,19 +289,45 @@ end
 function updateNonCompanionEntities(dt, isSpacePressed)
 	if isSpacePressed == true then
 		for k,v in pairs(entities) do
-			if k == "shop" then
-				shop(level)
-			end
-		end
-	end
+      if(distance(v,player) < v.range) then
+        v.interact(v,level,dt)
+      end
+		end  
+  else
+    for k,v in pairs(entities) do
+      v.progress = math.max(0,v.progress - 3 * dt)
+		end  
+  end
+  
+  if next(interaction) then
+    interaction.delay = math.max(0,interaction.delay - dt)
+    if interaction.delay <= 0 then
+      interaction = {}
+    end
+  end
+  
 end
 
 function getVisibleNodes()
 	return visibleNodes
 end
 
+function bubble(entity,level,dt)
+  entity.progress = entity.progress + dt
+  if entity.progress >= entity.duration then
+    entity.complete(level)
+    interaction.complete = true
+  end
+  interaction.entity = entity
+  interaction.progress = entity.progress
+  interaction.duration = entity.duration
+  interaction.delay = 1
+end
+
 function shop(level)
 	local iceCreamCost = 3 + level * 2
-	player.iceCream = true
-	player.cash = player.cash - iceCreamCost
+  if iceCreamCost <= player.cash then
+    player.iceCream = true
+    player.cash = player.cash - iceCreamCost
+  end
 end
