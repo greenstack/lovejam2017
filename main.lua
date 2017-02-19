@@ -14,13 +14,7 @@ function love.load()
   initialPlayerPos.x = 5
   initialPlayerPos.y = 5
   
-  initEntityHandler(initialPlayerPos)
-  
-  local f = love.filesystem.newFile("init.txt")
-  f:open("w")
-  f:write("hey" .. "\r\n")
-  f:close()
-  
+  initEntityHandler(initialPlayerPos)  
   
 end
 

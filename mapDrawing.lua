@@ -22,6 +22,8 @@ function setupMap()
 	  local n = {}
 	  n.x = x
 	  n.y = y
+	  n.p_cost = 0
+	  n.h_cost = 0
 	  local tileCode = (y*mapHeight-mapWidth+x)
     local groundLayer = 1
 	  local blockingLayer = 2
