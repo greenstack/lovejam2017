@@ -3,7 +3,10 @@
 require("mapDrawing")
 require("entityhandler")
 require("spriteManager")
+require("uimanager")
 
+obedience_meter = 100
+lose = false
 
 function love.load()
   setupMap()
@@ -22,15 +25,19 @@ function love.update(dt)
   local playerSpeed = getPlayer().speed
   if up then
 	movePlayer(0, -1 * playerSpeed * tileSize * dt)
+	player.direction = dBack
   end
   if down then
     movePlayer(0, playerSpeed * tileSize * dt)
+	player.direction = dFront
   end
   if left then
     movePlayer(-1 * playerSpeed * tileSize * dt, 0)
+	player.direction = dLeft
   end
   if right then
     movePlayer(playerSpeed * tileSize * dt, 0)
+	player.direction = dRight
   end
   moveMap()
   updateEntities(dt)
@@ -40,16 +47,12 @@ function love.keypressed(key,scancode,isrepeat)
   player = getPlayer()
 	if key == "up" then
 		up = true
-    player.direction = dBack
 	elseif key == "down" then
 		down = true
-    player.direction = dFront
 	elseif key == "left" then
 		left = true
-    player.direction = dLeft
 	elseif key == "right" then
 		right = true
-    player.direction = dRight
 	end
 end
 
@@ -96,6 +99,8 @@ function love.draw()
   local entityScale = 1.5
   love.graphics.draw(characterSetImage, characterQuads[playerQPos][player.direction], playerScreenPos.x - entityHitboxOffsetX, playerScreenPos.y - entityHitboxOffsetY, 0, entityScale, entityScale)
   love.graphics.draw(characterSetImage, characterQuads[companionQPos][companion.direction], companionScreenPos.x - entityHitboxOffsetX, companionScreenPos.y - entityHitboxOffsetY, 0, entityScale, entityScale)
+
+  drawUI()
 end
 
 function love.threaderror(thread,err)
