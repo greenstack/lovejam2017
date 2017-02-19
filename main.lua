@@ -83,7 +83,6 @@ function love.draw()
   love.graphics.print("PlayerNode: (" .. getPlayer().nodeX .. "," .. getPlayer().nodeY .. ")", 10, 50)
   love.graphics.print("Tile ID: ".. isOnNode(getNodes(),player).tile, 10,60)
   love.graphics.print("Node Type: "..isOnNode(getNodes(), player).type, 10,70)
-
   love.graphics.setColor(200,200,200,100)
   local visibleNodes = getVisibleNodes()
   for k,v in pairs(visibleNodes) do
@@ -92,7 +91,7 @@ function love.draw()
   end
   
   love.graphics.setColor(200,80,40)
-  love.graphics.circle("fill",playerScreenPos.x, playerScreenPos.y,10)
+  love.graphics.circle("fill",playerScreenPos.x, playerScreenPos.y,8)
   
 end
 
