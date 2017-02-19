@@ -3,7 +3,7 @@ return {
   luaversion = "5.1",
   tiledversion = "0.18.1",
   orientation = "orthogonal",
-  renderorder = "right-down",
+  renderorder = "left-down",
   width = 25,
   height = 25,
   tilesize = 32,

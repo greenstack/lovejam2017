@@ -17,12 +17,12 @@ function setupMap()
   mapHeight = mapInfo.height
   
   mapNodes = {}
-  for y=1,mapWidth do
-    for x=1, mapHeight do
+  for y=1, mapHeight do
+    for x=1, mapWidth do
 	  local n = {}
 	  n.x = x
 	  n.y = y
-	  local tileCode = (y*tileSheetDim-tileSheetDim+x)
+	  local tileCode = (y*mapHeight-mapWidth+x)
     local groundLayer = 1
 	  local blockingLayer = 2
     local decorationLayer = 3
