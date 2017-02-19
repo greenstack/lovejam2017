@@ -88,14 +88,14 @@ function love.draw()
   local visibleNodes = getVisibleNodes()
   for k,v in pairs(visibleNodes) do
     local sp = worldToScreenPos(v.x + .5,v.y + .5,mapX,mapY,tileSize)
-	love.graphics.circle("fill",sp.x,sp.y,3)
+	  love.graphics.circle("fill",sp.x,sp.y,3)
   end
   love.graphics.reset()
-  love.graphics.draw(characterSetImage, characterQuads[playerQPos][player.direction], playerScreenPos.x - 10, playerScreenPos.y - 15, 0, 1.5, 1.5)
-  love.graphics.setColor(100,180,80) -- the companion's dot
-  love.graphics.circle("fill",companionScreenPos.x, companionScreenPos.y,8)
-
-  
+  local entityHitboxOffsetX = 10
+  local entityHitboxOffsetY = 15
+  local entityScale = 1.5
+  love.graphics.draw(characterSetImage, characterQuads[playerQPos][player.direction], playerScreenPos.x - entityHitboxOffsetX, playerScreenPos.y - entityHitboxOffsetY, 0, entityScale, entityScale)
+  love.graphics.draw(characterSetImage, characterQuads[companionQPos][companion.direction], companionScreenPos.x - entityHitboxOffsetX, companionScreenPos.y - entityHitboxOffsetY, 0, entityScale, entityScale)
 end
 
 function love.threaderror(thread,err)

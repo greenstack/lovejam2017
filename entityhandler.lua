@@ -42,6 +42,7 @@ function initEntityHandler(initialPlayerPos)
 	companion.y = initialPlayerPos.y + .5
 	companion.speed = .2	
 	companion.timer = 0
+	companion.direction = dFront
 	
 	sightPlayerNodeChannel = love.thread.getChannel("sightPlayerChan")
 	sightNodesChannel = love.thread.getChannel("sightNodesChan")
@@ -114,10 +115,6 @@ function movePlayer(dx,dy)
 end
 
 function updateEntities(dt)
-	--for k,v in pairs(entities) do
-		-- do stuff in here
-	--end
-	
 	
 	--also handle companion AI
 	companion.timer = companion.timer - dt
@@ -214,7 +211,7 @@ function updateEntities(dt)
 		elseif dy < 0 then
 			dy = -math.min(math.abs(tNode.y - (companion.y - .5)), .1 * tileSize * dt)
 		end
-	
+		companion.direction = getEntityNewDirection(dx, dy)
 		companion.x = companion.x + dx
 		companion.y = companion.y + dy
 		companionGridPos = {}

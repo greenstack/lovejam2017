@@ -22,5 +22,21 @@ function setupCharacterSprites()
       characterQuads[i][j] = love.graphics.newQuad(j*12, (i-1)*characterSizeY, characterSizeX, characterSizeY, characterSetImage:getWidth(), characterSetImage:getHeight())
     end
   end
-  playerQuadFront = characterQuads[1][1]
+end
+
+function getEntityNewDirection(dx, dy)
+  if (0 < dx) then
+    newDirection = dRight
+    return dRight
+  elseif (dx < 0) then
+    newDirection = dLeft
+    return dLeft
+  elseif (0 > dy) then
+    newDirection = dBack
+    return dBack
+  elseif (0 < dy) then
+    newDirection = dFront
+    return dFront
+  end
+  return newDirection
 end
