@@ -3,7 +3,10 @@
 require("mapDrawing")
 require("entityhandler")
 require("spriteManager")
+require("uimanager")
 
+obedience_meter = 100
+lose = false
 
 function love.load()
   setupMap()
@@ -19,38 +22,41 @@ function love.load()
 end
 
 function love.update(dt)
-  local playerSpeed = getPlayer().speed
-  if up then
-    --moveMap(0, -0.2 * tileSize * dt)
-	movePlayer(0, -1 * playerSpeed * tileSize * dt)
-  end
-  if down then
-    movePlayer(0, playerSpeed * tileSize * dt)
-  end
-  if left then
-    movePlayer(-1 * playerSpeed * tileSize * dt, 0)
-  end
-  if right then
-    movePlayer(playerSpeed * tileSize * dt, 0)
-  end
-  moveMap()
-  updateEntities(dt)
+	if not lose then
+	  updateUI()
+	  local playerSpeed = getPlayer().speed
+	  if up then
+		
+		movePlayer(0, -1 * playerSpeed * tileSize * dt)
+		player.direction = dBack
+	  end
+	  if down then
+		movePlayer(0, playerSpeed * tileSize * dt)
+		player.direction = dFront
+	  end
+	  if left then
+		movePlayer(-1 * playerSpeed * tileSize * dt, 0)
+		player.direction = dLeft
+	  end
+	  if right then
+		movePlayer(playerSpeed * tileSize * dt, 0)
+		player.direction = dRight
+	  end
+	  moveMap()
+	  updateEntities(dt)
+	end
 end
 
 function love.keypressed(key,scancode,isrepeat)
   player = getPlayer()
 	if key == "up" then
 		up = true
-    player.direction = dBack
 	elseif key == "down" then
 		down = true
-    player.direction = dFront
 	elseif key == "left" then
 		left = true
-    player.direction = dLeft
 	elseif key == "right" then
 		right = true
-    player.direction = dRight
 	end
 end
 
@@ -96,7 +102,7 @@ function love.draw()
   love.graphics.setColor(100,180,80) -- the companion's dot
   love.graphics.circle("fill",companionScreenPos.x, companionScreenPos.y,8)
 
-  
+  drawUI()
 end
 
 function love.threaderror(thread,err)
