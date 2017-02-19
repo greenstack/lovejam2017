@@ -14,6 +14,7 @@ function love.load()
   initialPlayerPos.x = 5
   initialPlayerPos.y = 5
   
+<<<<<<< HEAD
   initEntityHandler(initialPlayerPos)
   
   local f = love.filesystem.newFile("init.txt")
@@ -22,6 +23,10 @@ function love.load()
   f:close()
   
   setupCharacterSprites()
+=======
+  initEntityHandler(initialPlayerPos)  
+  
+>>>>>>> 52aeb449bfe5f391d5dedf97acf87bbeb718a468
 end
 
 function love.update(dt)
@@ -82,6 +87,8 @@ function love.draw()
   
   local player = getPlayer()
   local playerScreenPos = worldToScreenPos(player.x,player.y,mapX,mapY,tileSize)
+  local companion = getCompanion()
+  local companionScreenPos = worldToScreenPos(companion.x,companion.y,mapX,mapY,tileSize)
   love.graphics.setColor(0,0,0)
   love.graphics.print("FPS: "..love.timer.getFPS(), 10, 20)
   love.graphics.print("MapX: "..mapX, 10, 30)
@@ -97,6 +104,9 @@ function love.draw()
   end
   love.graphics.reset()
   love.graphics.draw(characterSetImage, characterQuads[playerQPos][player.direction], playerScreenPos.x - 10, playerScreenPos.y - 15, 0, 1.5, 1.5)
+  love.graphics.setColor(100,180,80) -- the companion's dot
+  love.graphics.circle("fill",companionScreenPos.x, companionScreenPos.y,8)
+
   
 end
 

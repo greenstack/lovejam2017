@@ -19,6 +19,13 @@ local sightNodesChannel
 local sightVisibleNodes
 local sightThread
 
+local pathTargetChannel
+local pathFinalPathChannel
+local pathNodesChannel
+local pathThread
+
+local companionPath = {}
+
 function initEntityHandler(initialPlayerPos)
 	player.x = initialPlayerPos.x + .5
 	player.y = initialPlayerPos.y + .5
@@ -31,10 +38,20 @@ function initEntityHandler(initialPlayerPos)
 	player.nodeX = node.x
 	player.nodeY = node.y
 	
+	companion.x = initialPlayerPos.x + .5 - 1
+	companion.y = initialPlayerPos.y + .5
+	companion.speed = .2	
+	companion.timer = 0
+	
 	sightPlayerNodeChannel = love.thread.getChannel("sightPlayerChan")
 	sightNodesChannel = love.thread.getChannel("sightNodesChan")
 	sightVisibleNodes = love.thread.getChannel("sightVisibleChan")
 	sightThread = love.thread.newThread("sightthread.lua")
+	
+	pathTargetChannel = love.thread.getChannel("targetChan")
+	pathFinalPathChannel = love.thread.getChannel("finalPathChan")
+	pathNodesChannel = love.thread.getChannel("nodesChan")
+	pathThread = love.thread.newThread("pathfindthread.lua")
 	
 end
 
@@ -58,14 +75,14 @@ function getPlayer()
 	return player
 end
 
-function getCompainion()
+function getCompanion()
 	return companion
 end
 
 function movePlayer(dx,dy)
 
 	local node = isOnNode(getNodes(),player)
-	local neighbors = getNeighbors(getNodes(), node)
+	--local neighbors = getNeighbors(getNodes(), node)
 	local u = getNodesAt(getNodes(),node.x,node.y - 1)	
 	local d = getNodesAt(getNodes(),node.x,node.y + 1)
 	local l = getNodesAt(getNodes(),node.x - 1,node.y)
@@ -84,19 +101,6 @@ function movePlayer(dx,dy)
 		dx = math.min(dx,r[1].x - player.x - (player.width / 2 / tileSize))
 	end
 	
-	
-
-	if dx < 0 then --walking left
-		
-	elseif dx > 0 then --walking right
-	
-	end
-	
-	if dy < 0 then --walking up
-	
-	elseif dy > 0 then --walking down
-	
-	end
 
 	player.x = player.x + dx
 	player.y = player.y + dy
@@ -116,13 +120,124 @@ function updateEntities(dt)
 	
 	
 	--also handle companion AI
+	companion.timer = companion.timer - dt
+	if companion.timer <= 0 then -- find new place to wander
+		companion.timer = math.random(4,8)
+		local nPathfindTo = {}
+		local eHiddenNodes = {}
+		local eHiddenCount = 0
+		local eVisibleNodes = {}
+		local eVisibleCount = 0
+		local nodes = getNodes()
+		for k,v in pairs(nodes) do
+			if distance(v,player) < 8 then
+				local hidden = false
+				for k2,v2 in pairs(visibleNodes) do
+					if v.x == v2.x and v.y == v2.y then
+						hidden = false
+						break
+					else
+						hidden = true
+					end
+				end
+				if hidden then
+					table.insert(eHiddenNodes,v)
+					eHiddenCount = eHiddenCount + 1
+				else
+					table.insert(eVisibleNodes,v)
+					eVisibleCount = eVisibleCount + 1
+				end
+			end
+		end
+		
+		if eHiddenCount > 0 then
+			nPathfindTo = eHiddenNodes[math.random(1,eHiddenCount)]
+		elseif eVisibleCount > 0 then
+			nPathfindTo = eVisibleNodes[math.random(1,eVisibleCount)]
+		end
+		
+		local f = love.filesystem.newFile("ncount.txt")
+		f:open("w")
+		f:write(eHiddenCount .. "," .. eVisibleCount .. "," .. "\r\n")
+		f:close()
+		
+			
+		if nPathfindTo then -- companion has found a new place he wants to be...
+			pathTargetChannel:clear()
+			pathNodesChannel:clear()
+			pathThread:start()
+			local target = {}
+			target[1] = isOnNode(getNodes(),companion)
+			target[2] = nPathfindTo
+			pathTargetChannel:push(target)
+			pathNodesChannel:push(nodes)
+			newPathNeeded = false
+		end
+			
+	end
 	
+	if pathFinalPathChannel:getCount() > 0 then
+		companionPath = pathFinalPathChannel:pop()
+		
+		local f = love.filesystem.newFile("path.txt")
+		f:open("w")
+		if companionPath.head then
+			for i = companionPath.head,1,-1 do
+				f:write(nodeToString(companionPath[i]) .. "\r\n")
+			end
+		else
+			f:write("nil path")
+		end
+		
+		f:close()
+	end
 	
+	if companionPath[companionPath.head] then
+		--move towards companionPath[companionPath.head]
+		local tNode = companionPath[companionPath.head]
+		local dx = tNode.x - (companion.x - .5)
+		local dy = tNode.y - (companion.y - .5)
+		
+		--local f = love.filesystem.newFile("dxdy.txt")
+		--f:open("w")
+		--f:write("dx: " .. dx .. "  dy: " .. dy .. "\r\n" .. nodeToString(tNode) .. "," .. nodeToString(companion))
+		--f:close()
+		
+		if dx > 0 then
+			dx = math.min(tNode.x - (companion.x - .5), .1 * tileSize *  dt)
+		elseif dx < 0 then
+			dx = -math.min(math.abs(tNode.x - (companion.x - .5)), .1 * tileSize * dt)
+		end
+		
+		if dy > 0 then
+			dy = math.min(tNode.y - (companion.y - .5), .1 * tileSize *  dt)
+		elseif dy < 0 then
+			dy = -math.min(math.abs(tNode.y - (companion.y - .5)), .1 * tileSize * dt)
+		end
+	
+		companion.x = companion.x + dx
+		companion.y = companion.y + dy
+		companionGridPos = {}
+		companionGridPos.x = companion.x - .5
+		companionGridPos.y = companion.y - .5
+		
+		local dis = distance(companionGridPos,tNode)
+		
+		if dis < .1 then
+			companionPath.head = companionPath.head - 1
+		end
+		--then check if the node you're on is companionPath[companionPath.head]
+		-- if so decrement companionPath.head
+		
+	end
+	
+	--handle line-of-sight calculation results
 	if sightVisibleNodes:getCount() > 0 then
 		visibleNodes = sightVisibleNodes:pop()
 		sightVisibleNodes:clear()
 	end
 	
+	--spin up a new thread for sight calculations if needed
 	if newSightNeeded then
 		newSightNeeded = false
 		sightPlayerNodeChannel:clear()
