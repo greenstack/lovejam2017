@@ -7,6 +7,8 @@ require("uimanager")
 
 obedience_meter = 100
 lose = false
+contacts = 0
+contact_goal = 10
 
 function love.load()
   setupMap()
@@ -22,25 +24,28 @@ function love.load()
 end
 
 function love.update(dt)
-  local playerSpeed = getPlayer().speed
-  if up then
-	movePlayer(0, -1 * playerSpeed * tileSize * dt)
-	player.direction = dBack
+  if not lose then
+	  local playerSpeed = getPlayer().speed
+	  if up then
+		movePlayer(0, -1 * playerSpeed * tileSize * dt)
+		player.direction = dBack
+	  end
+	  if down then
+		movePlayer(0, playerSpeed * tileSize * dt)
+		player.direction = dFront
+	  end
+	  if left then
+		movePlayer(-1 * playerSpeed * tileSize * dt, 0)
+		player.direction = dLeft
+	  end
+	  if right then
+		movePlayer(playerSpeed * tileSize * dt, 0)
+		player.direction = dRight
+	  end
+	  moveMap()
+	  updateEntities(dt)
+    updateUI()
   end
-  if down then
-    movePlayer(0, playerSpeed * tileSize * dt)
-	player.direction = dFront
-  end
-  if left then
-    movePlayer(-1 * playerSpeed * tileSize * dt, 0)
-	player.direction = dLeft
-  end
-  if right then
-    movePlayer(playerSpeed * tileSize * dt, 0)
-	player.direction = dRight
-  end
-  moveMap()
-  updateEntities(dt)
 end
 
 function love.keypressed(key,scancode,isrepeat)
