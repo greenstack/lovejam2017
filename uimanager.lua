@@ -3,7 +3,7 @@ require("spriteManager")
 function drawUI()
 	
 	local windowX, windowY = love.graphics.getDimensions()
-	love.graphics.setColor(102, 102, 153)
+	love.graphics.setColor(102, 102, 153,150)
 	love.graphics.rectangle("fill",0,0,windowX,20,10,10)
   love.graphics.rectangle("fill",0,windowY - 30,windowX,30,10,10)
   

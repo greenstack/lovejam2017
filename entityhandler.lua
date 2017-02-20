@@ -118,20 +118,60 @@ function movePlayer(dx,dy)
 	local d = getNodesAt(getNodes(),node.x,node.y + 1)
 	local l = getNodesAt(getNodes(),node.x - 1,node.y)
 	local r = getNodesAt(getNodes(),node.x + 1,node.y)
+  
+  --f = love.filesystem.newFile("collision.txt")
+  --f:open("w")
+  --f:close()
+
+  if not next(u) then
+    u = {}
+    local u1 = {}
+    u1.x = node.x
+    u1.y = node.y - 1
+    u1.type = 1
+    table.insert(u,u1)
+  end
+  if not next(d) then
+    d = {}
+    local d1 = {}
+    d1.x = node.x
+    d1.y = node.y + 1
+    d1.type = 1
+    table.insert(d,d1)
+  end
+  if not next(l) then
+    l = {}
+    local l1 = {}
+    l1.x = node.x - 1
+    l1.y = node.y
+    l1.type = 1
+    table.insert(l,l1)
+  end
+  if not next(r) then
+    r = {}
+    local r1 = {}
+    r1.x = node.x + 1
+    r1.y = node.y
+    r1.type = 1
+    table.insert(r,r1)
+  end
+  
+	
 	
 	if dy < 0 and next(u) and u[1].type == 1 then
 		dy = -math.min(math.abs(dy),math.abs(player.y - (player.height / 2 / tileSize) - u[1].y - 1))
-	end
+  end
 	if dy > 0 and next(d) and d[1].type == 1 then
 		dy = math.min(dy,d[1].y - player.y - (player.height / 2 / tileSize))
+   
 	end
 	if dx < 0 and next(l) and l[1].type == 1 then
 		dx = -math.min(math.abs(dx),math.abs(player.x - (player.width / 2 / tileSize) - l[1].x - 1))
+    
 	end
 	if dx > 0 and next(r) and r[1].type == 1 then
 		dx = math.min(dx,r[1].x - player.x - (player.width / 2 / tileSize))
-	end
-	
+	end	
 
 	player.x = player.x + dx
 	player.y = player.y + dy
