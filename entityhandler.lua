@@ -1,8 +1,11 @@
 require("gameutils")
 require("spriteManager")
 local entities = {}
+local entityc = 0
 local player = {}
 local companion = {}
+
+local levelEntityInfo
 
 --[[ structure of entity, companion, and player tables
 entity.x = 0
@@ -45,11 +48,14 @@ function initEntityHandler(initialPlayerPos, level)
 	player.nodeX = node.x
 	player.nodeY = node.y
 	
-	companion.x = initialPlayerPos.x + .5 - 1
-	companion.y = initialPlayerPos.y + .5
+	companion.x = initialPlayerPos.x + .5 + 3
+	companion.y = initialPlayerPos.y + .5 + 1
 	companion.speed = .2	
 	companion.timer = 0
 	companion.direction = dFront
+  
+  levelEntityInfo = require("levelOne_pathing")
+  entityc = 0
 	
 	sightPlayerNodeChannel = love.thread.getChannel("sightPlayerChan")
 	sightNodesChannel = love.thread.getChannel("sightNodesChan")
@@ -116,15 +122,11 @@ end
 function movePlayer(dx,dy)
 
 	local node = isOnNode(getNodes(),player)
-	--local neighbors = getNeighbors(getNodes(), node)
+
 	local u = getNodesAt(getNodes(),node.x,node.y - 1)	
 	local d = getNodesAt(getNodes(),node.x,node.y + 1)
 	local l = getNodesAt(getNodes(),node.x - 1,node.y)
 	local r = getNodesAt(getNodes(),node.x + 1,node.y)
-  
-  --f = love.filesystem.newFile("collision.txt")
-  --f:open("w")
-  --f:close()
 
   if not next(u) then
     u = {}
@@ -158,9 +160,7 @@ function movePlayer(dx,dy)
     r1.type = 1
     table.insert(r,r1)
   end
-  
-	
-	
+
 	if dy < 0 and next(u) and u[1].type == 1 then
 		dy = -math.min(math.abs(dy),math.abs(player.y - (player.height / 2 / tileSize) - u[1].y - 1))
   end
@@ -189,6 +189,17 @@ end
 
 function updateEntities(dt, isSpacePressed)
 
+  
+  -- handle contact ai and spawning
+  if entityc < 15  then -- and math.random(0,math.max(0,100 - dt * 100)) == 0
+    
+    for k,v in pairs(levelEntityInfo.enodes) do 
+      local contact
+    end
+
+  end
+
+  -- check if companion is in line of sight
 	local los = false
 	local cNode = isOnNode(getNodes(),companion)
 	for k,v in pairs(visibleNodes) do
@@ -202,7 +213,7 @@ function updateEntities(dt, isSpacePressed)
 	if los then
 		obedience_meter = math.min(100,obedience_meter + 1 * dt)
 	else
-		obedience_meter = math.max(0,obedience_meter - 1 * dt)
+		obedience_meter = math.max(0,obedience_meter - 0 * dt)
 	end
 	
 	--also handle companion AI
@@ -214,11 +225,13 @@ function updateEntities(dt, isSpacePressed)
 		local eHiddenNodes = {}
 		local eHiddenCount = 0;
 		local eVisibleNodes = {}
+
 		local eVisibleCount = 0;
 		for k,v in pairs(hiddenNodes) do
 			if distance(companion,v) < 14 + level * level then
 				table.insert(eHiddenNodes,v)
 				eHiddenCount = eHiddenCount + 1
+
 			end
 		end
 		--if math.random(0,3) == 3 then
