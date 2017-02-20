@@ -114,18 +114,19 @@ function getShadowId(node, nodes)
 	u = getNodesAt(nodes,node.x,node.y - 1)
 	d = getNodesAt(nodes,node.x,node.y + 1)
 	local shadowId = 0
-	if l ~= nil then
+	if not next(l) then
 		shadowId = shadowId + 8
 	end
-	if r ~= nil then
+	if not next(r) then
 		shadowId = shadowId + 2
 	end
-	if u ~= nil then
+	if not next(u) then
 		shadowId = shadowId + 1
 	end
-	if d ~= nil then
+	if not next(d) then
 		shadowId = shadowId + 4
 	end
+	return shadowId
 end
 
  -- puts all values in t2 into t1

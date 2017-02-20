@@ -115,16 +115,26 @@ function love.draw()
   --love.graphics.print("PlayerIceCream: "..tostring(player.iceCream), 10, 80)
   love.graphics.setColor(200,200,200,100)
   local visibleNodes = getVisibleNodes()
+  local companionHidden = false
   for k,v in pairs(hiddenNodes) do
+    if v.x == companion.nodeX and v.y == companion.nodeY then
+      companionHidden = true
+    end
     local sp = worldToScreenPos(v.x, v.y,mapX,mapY,tileSize)
-	  love.graphics.draw(tilesetImage,tileQuads[70],sp.x,sp.y)
+    local shadowId = getShadowId(v, hiddenNodes)
+    local shadowIndex = getShadowIndex(shadowId)
+	  love.graphics.draw(tilesetImage,tileQuads[100],sp.x,sp.y)
+    --love.graphics.print(shadowId, sp.x, sp.y)
+    --love.graphics.print(tostring(companionHidden),10,90)
   end
   love.graphics.reset()
   local entityHitboxOffsetX = 10
   local entityHitboxOffsetY = 15
   local entityScale = 1.5
   love.graphics.draw(characterSetImage, characterQuads[playerQPos][player.direction], playerScreenPos.x - entityHitboxOffsetX, playerScreenPos.y - entityHitboxOffsetY, 0, entityScale, entityScale)
-  love.graphics.draw(characterSetImage, characterQuads[companionQPos][companion.direction], companionScreenPos.x - entityHitboxOffsetX, companionScreenPos.y - entityHitboxOffsetY, 0, entityScale, entityScale)
+  if companionHidden == false then
+    love.graphics.draw(characterSetImage, characterQuads[companionQPos][companion.direction], companionScreenPos.x - entityHitboxOffsetX, companionScreenPos.y - entityHitboxOffsetY, 0, entityScale, entityScale)
+  end
 
   drawUI()
 end

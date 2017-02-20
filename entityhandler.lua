@@ -78,9 +78,13 @@ function initEntityHandler(initialPlayerPos, level)
 		pid = 1
 	}
   
+	node = isOnNode(getNodes(),companion)
+
   entities['companion'] = {
     x = companion.x,
     y = companion.y,
+		nodeX = node.x,
+		nodeY = node.y,
     interact = bubble,
     complete = feedCompanion,
     progress = 0,
@@ -390,6 +394,12 @@ function updateNonCompanionEntities(dt, isSpacePressed)
     end
   end
   
+	local node = isOnNode(getNodes(),companion)
+	if node.x ~= companion.nodeX or node.y ~= companion.nodeY then
+		companion.nodeX = node.x
+		companion.nodeY = node.y
+	end
+
   -- handle contacts
   
   
