@@ -5,13 +5,12 @@ local mapWidth, mapHeight -- width and height in tiles
 
 local tilesDisplayWidth, tilesDisplayHeight -- number of tiles to show
 
-local tilesetImage
-local tileQuads = {} -- parts of the tileset used for different tiles
+tileQuads = {} -- parts of the tileset used for different tiles
 local tilesetSprite
 local tileSheetDim = 10
 
-function setupMap()
-  mapInfo = require("levelOne")
+function setupMap(level)
+  mapInfo = require("level"..level)
   mapWidth = mapInfo.width
   mapHeight = mapInfo.height
   
@@ -60,7 +59,7 @@ end
 function setupTileSet()
   tilesetImage = love.graphics.newImage("resources/images/tiles.png")
   tilesetImage:setFilter("nearest", "linear") -- this "linear filter" removes some artifacts if we were to scale the tiles
-  tileSize = mapInfo.tilesize
+  tileSize = mapInfo.tilewidth
 
   tileQuads = {}
 

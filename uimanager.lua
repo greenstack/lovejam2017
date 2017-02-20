@@ -1,4 +1,4 @@
-
+require("spriteManager")
 
 function drawUI()
 	
@@ -24,6 +24,8 @@ function drawUI()
     local r = 255 - math.min(255,obedience_meter*255/50)
     local g = math.min(255,obedience_meter*255/50)
     local b = 0
+
+
     love.graphics.setColor(0,0,0)
     love.graphics.rectangle("fill",100,4,100*6,10,10,10)
     love.graphics.setColor(r, g, b)
@@ -49,6 +51,9 @@ function drawUI()
       local borderWidth = 3
       local pieRadius = 20
       local verticalBuffer = 30
+      
+      love.graphics.reset()
+      love.graphics.draw(characterPortraitImage, portraitQuads[interaction.entity.pid], ix - borderWidth + portraitSize, iy - bubbleHeight - borderWidth - verticalBuffer)
       
       love.graphics.setColor(153, 204, 255)
       love.graphics.rectangle("fill",ix - borderWidth,iy - bubbleHeight - borderWidth - verticalBuffer,bubbleWidth + borderWidth,bubbleHeight + borderWidth,15,15)

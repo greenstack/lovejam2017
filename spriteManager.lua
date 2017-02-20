@@ -22,6 +22,21 @@ function setupCharacterSprites()
       characterQuads[i][j] = love.graphics.newQuad(j*12, (i-1)*characterSizeY+1, characterSizeX, characterSizeY, characterSetImage:getWidth(), characterSetImage:getHeight())
     end
   end
+
+  portraitQuads = {}
+  characterPortraitImage = love.graphics.newImage("resources/images/portrates.png")
+  characterPortraitImage:setFilter("nearest","linear")
+  local cols = 7
+  local rows = 2 -- Update this as (if?) I add more portraits
+  local portraitCount = 8 -- Update this as I add more portraits
+  local currentPortrait = 1
+  portraitSize = 64
+  for j=1, rows do
+    for i=1, cols do
+      portraitQuads[currentPortrait] = love.graphics.newQuad((i-1)*portraitSize, (j-1)*portraitSize, portraitSize,portraitSize, characterPortraitImage:getWidth(), characterPortraitImage:getHeight())
+      currentPortrait = currentPortrait + 1
+    end
+  end
 end
 
 function getEntityNewDirection(dx, dy)
@@ -39,4 +54,8 @@ function getEntityNewDirection(dx, dy)
     return dFront
   end
   return newDirection
+end
+
+function getEntityPortrait(entityId)
+
 end

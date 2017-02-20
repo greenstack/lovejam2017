@@ -14,6 +14,9 @@ entity.sprite = {left.jpg,right.jpg,up.jpg,down.jpg}
 entity.dir = 0
 ]]
 
+hiddenNodes = {}
+		hiddenCount = 0
+
 local newSightNeeded = true
 local visibleNodes = {}
 
@@ -71,7 +74,8 @@ function initEntityHandler(initialPlayerPos, level)
     complete = shop,
     progress = 0,
     duration = 3,
-    range = 1.5
+    range = 1.5,
+		pid = 1
 	}
   
   entities['companion'] = {
@@ -81,7 +85,8 @@ function initEntityHandler(initialPlayerPos, level)
     complete = feedCompanion,
     progress = 0,
     duration = 1,
-    range = 1.5
+    range = 1.5,
+		pid = 2
   }
 
 end
@@ -221,36 +226,31 @@ function updateEntities(dt, isSpacePressed)
 	if companion.timer <= 0 then -- find new place to wander
 		companion.timer = math.random(3,5)
 		local nPathfindTo = {}
-		local eHiddenNodes = {}
-		local eHiddenCount = 0
-		local eVisibleNodes = {}
-		local eVisibleCount = 0
 		local nodes = getNodes()
-		for k,v in pairs(nodes) do
-			if distance(v,companion) < 14 then
-				local hidden = false
-				for k2,v2 in pairs(visibleNodes) do
-					if v.x == v2.x and v.y == v2.y then
-						hidden = false
-						break
-					else
-						hidden = true
-					end
-				end
-				if hidden then
-					table.insert(eHiddenNodes,v)
-					eHiddenCount = eHiddenCount + 1
-				else
-					table.insert(eVisibleNodes,v)
-					eVisibleCount = eVisibleCount + 1
-				end
+		local eHiddenNodes = {}
+		local eHiddenCount = 0;
+		local eVisibleNodes = {}
+
+		local eVisibleCount = 0;
+		for k,v in pairs(hiddenNodes) do
+			if distance(companion,v) < 14 + level * level then
+				table.insert(eHiddenNodes,v)
+				eHiddenCount = eHiddenCount + 1
+
 			end
 		end
-		
-		if eHiddenCount > 0 or math.random(0,3) == 3 then
-			nPathfindTo = eHiddenNodes[math.random(1,eHiddenCount)]
-		elseif eVisibleCount > 0 then
-			nPathfindTo = eVisibleNodes[math.random(1,eVisibleCount)]
+		--if math.random(0,3) == 3 then
+			if eHiddenCount > 0 then
+				nPathfindTo = eHiddenNodes[math.random(1,eHiddenCount)]
+			else
+				for k,v in pairs(visibleNodes) do
+					if distance(companion,v) < 14 + level * level then
+						table.insert(eVisibleNodes, v)
+						eVisibleCount = eVisibleCount + 1
+					end
+					nPathfindTo = eVisibleNodes[math.random(1,eVisibleCount)]
+				end
+		--	end
 		end
 		
 		local f = love.filesystem.newFile("ncount.txt")
@@ -332,7 +332,24 @@ function updateEntities(dt, isSpacePressed)
 	
 	--handle line-of-sight calculation results
 	if sightVisibleNodes:getCount() > 0 then
+		local nodes = getNodes()
+		hiddenNodes = {}
+		hiddenCount = 0
 		visibleNodes = sightVisibleNodes:pop()
+		for k,v in pairs(nodes) do
+			local hidden = false
+			for k2,v2 in pairs(visibleNodes) do
+				if v.x == v2.x and v.y == v2.y then
+					hidden = false
+					break
+				else
+					hidden = true
+				end
+			end
+			if hidden then
+				table.insert(hiddenNodes,v)
+			end
+		end
 		sightVisibleNodes:clear()
 	end
 	
@@ -348,6 +365,7 @@ function updateEntities(dt, isSpacePressed)
 		sightPlayerNodeChannel:push(playerNode)
 		sightNodesChannel:push(getNodes())
 	end
+
   entities['companion'].x = companion.x
   entities['companion'].y = companion.y
 	updateNonCompanionEntities(dt, isSpacePressed)
