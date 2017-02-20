@@ -324,8 +324,6 @@ function updateNonCompanionEntities(dt, isSpacePressed)
   -- handle contacts
   
   
-
-  
   
 end
 
