@@ -13,6 +13,8 @@ transitionScreen = false
 
 contact_goal = 0
 
+nextLevel = false
+
 function love.load()
   love.math.setRandomSeed(os.time())
   setupMap(level)
