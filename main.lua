@@ -153,6 +153,12 @@ function love.draw()
     love.graphics.draw(characterSetImage, characterQuads[companionQPos][companion.direction], companionScreenPos.x - entityHitboxOffsetX, companionScreenPos.y - entityHitboxOffsetY, 0, entityScale, entityScale)
   end
 
+  love.graphics.setColor(0,255,255)
+  for i=1,contactc do
+	local sp = worldToScreenPos(entities[i].x,entities[i].y,mapX,mapY,tileSize)
+    love.graphics.circle("fill",sp.x,sp.y,5)
+  end
+ 
   drawUI()
 end
 
