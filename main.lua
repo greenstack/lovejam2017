@@ -5,14 +5,23 @@ require("entityhandler")
 require("spriteManager")
 require("uimanager")
 
-
-
 level = 1
+playlist = {}
+songTime = {}
 
 function love.load()
-
+  love.math.setRandomSeed(os.time())
   setupMap(level)
-
+  playlist[1] = love.audio.newSource("resources/sound/Theme A.ogg")
+  songTime[1] = 226
+  playlist[1]:setVolume(.6)
+  playlist[2] = love.audio.newSource("resources/sound/Theme B.ogg")
+  songTime[2] = 150
+  playlist[3] = love.audio.newSource("resources/sound/Theme C.ogg")
+  songTime[3] = 187
+  elapsedSongTime = 0
+  songIndex = 1
+  love.audio.play(playlist[songIndex])
   setupMapView()
   setupTileSet()
   -- love.graphics.setFont(12)
@@ -60,6 +69,14 @@ function love.update(dt)
     if space then
       love.load()
     end
+  end
+
+  if elapsedSongTime >= songTime[songIndex] then
+    elapsedSongTime = 0
+    songIndex = math.random(1,3)
+    love.audio.play(playlist[songIndex])
+  else
+    elapsedSongTime = elapsedSongTime + dt
   end
 
 end
