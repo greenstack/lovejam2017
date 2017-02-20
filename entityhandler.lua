@@ -192,16 +192,11 @@ function updateEntities(dt, isSpacePressed)
   
   -- handle contact ai and spawning
   if entityc < 15  then -- and math.random(0,math.max(0,100 - dt * 100)) == 0
-  
-    f = love.filesystem.newFile("enodes.txt")
-    f:open("w")
     
     for k,v in pairs(levelEntityInfo.enodes) do 
       local contact
     end
-    
-  
-    
+
   end
 
   -- check if companion is in line of sight
