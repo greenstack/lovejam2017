@@ -15,7 +15,7 @@ entity.dir = 0
 ]]
 
 hiddenNodes = {}
-		hiddenCount = 0
+hiddenCount = 0
 
 local newSightNeeded = true
 local visibleNodes = {}
@@ -213,7 +213,7 @@ function updateEntities(dt, isSpacePressed)
       x = levelEntityInfo.enodes[enoden][1] + .5,
       y = levelEntityInfo.enodes[enoden][2] + .5,
       interact = bubble,
-      complete = shop,
+      complete = contactPI,
       progress = 0,
       duration = 2,
       range = 1,
@@ -221,6 +221,7 @@ function updateEntities(dt, isSpacePressed)
 	  curTarget = {},
 	  cameFrom = getPathNode(levelEntityInfo.nodes,levelEntityInfo.enodes[enoden][1],levelEntityInfo.enodes[enoden][2]),
 	  moveDelay = 0,
+	  contacted = false,
     }
     contactc = contactc + 1
     table.insert(entities,contact)
@@ -449,15 +450,15 @@ end
 function updateNonCompanionEntities(dt, isSpacePressed)
 	if isSpacePressed == true then
 		for k,v in pairs(entities) do
-      if(distance(v,player) < v.range) then
-        v.interact(v,level,dt)
-        break
-      end
+			if(distance(v,player) < v.range) then
+				v.interact(v,level,dt)
+				break
+			end
 		end  
-  else
+	else
     for k,v in pairs(entities) do
       v.progress = math.max(0,v.progress - 3 * dt)
-		end  
+	end  
   end
   
   if next(interaction) then
@@ -490,7 +491,7 @@ function bubble(entity,level,dt)
   if not interaction.complete then
     entity.progress = entity.progress + dt
     if entity.progress >= entity.duration then
-      interaction.success = entity.complete(level)
+      interaction.success = entity.complete(level,entity)
       interaction.complete = true
     end
   
@@ -519,4 +520,15 @@ function feedCompanion(level)
   end
   companion.timer = 0
   return false
+end
+
+function contactPI(level,e)
+	if e.contacted then
+		return false
+	else
+		e.contacted = true
+		e.duration = .5
+		contacts = contacts + 1
+		return true
+	end
 end
