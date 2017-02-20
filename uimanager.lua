@@ -43,15 +43,14 @@ function drawUI()
     if next(getInteraction()) then
       local interaction = getInteraction()
       local screenPos = worldToScreenPos(interaction.entity.x,interaction.entity.y,mapX,mapY,tileSize)
-      local ix = screenPos.x
-      local iy = screenPos.y
       
       local bubbleWidth = 128
       local bubbleHeight = 60
       local borderWidth = 3
       local pieRadius = 20
       local verticalBuffer = 30
-      
+      local ix = math.min(windowX - bubbleWidth - 20,screenPos.x)
+      local iy = math.max(100,screenPos.y)
       
       love.graphics.setColor(153, 204, 255)
       love.graphics.rectangle("fill",ix - borderWidth,iy - bubbleHeight - borderWidth - verticalBuffer,bubbleWidth + borderWidth,bubbleHeight + borderWidth,15,15)
@@ -60,7 +59,7 @@ function drawUI()
       
       love.graphics.reset()
       love.graphics.draw(characterPortraitImage, portraitQuads[interaction.entity.pid], ix - borderWidth + portraitSize, iy - bubbleHeight - borderWidth - verticalBuffer)
-      
+
       love.graphics.setColor(0,0,0)
       love.graphics.circle("fill",ix + bubbleWidth / 4, iy - bubbleHeight / 2 - verticalBuffer - 2,pieRadius + borderWidth)
       if interaction.complete then

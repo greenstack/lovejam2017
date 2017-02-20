@@ -108,6 +108,26 @@ function getNeighbors(nodes,node)
 	return neighbors
 end
 
+function getShadowId(node, nodes)
+	l = getNodesAt(nodes,node.x - 1,node.y)
+	r = getNodesAt(nodes,node.x + 1,node.y)
+	u = getNodesAt(nodes,node.x,node.y - 1)
+	d = getNodesAt(nodes,node.x,node.y + 1)
+	local shadowId = 0
+	if l ~= nil then
+		shadowId = shadowId + 8
+	end
+	if r ~= nil then
+		shadowId = shadowId + 2
+	end
+	if u ~= nil then
+		shadowId = shadowId + 1
+	end
+	if d ~= nil then
+		shadowId = shadowId + 4
+	end
+end
+
  -- puts all values in t2 into t1
 function mergeTables(t1,t2)
 	for k,v in pairs(t2) do 

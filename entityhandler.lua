@@ -1,7 +1,7 @@
 require("gameutils")
 require("spriteManager")
-local entities = {}
-local entityc = 0
+entities = {}
+contactc = 0
 local player = {}
 local companion = {}
 
@@ -187,17 +187,93 @@ function movePlayer(dx,dy)
 	end
 end
 
+function getPathNode(nodes,x,y)
+	for k,v in pairs(nodes) do
+		if v.n[1] == x and v.n[2] == y then
+			return v
+		end
+	end
+end
+
+f = love.filesystem.newFile("distance.txt")
+	f:open("w")
+
 function updateEntities(dt, isSpacePressed)
 
   
   -- handle contact ai and spawning
-  if entityc < 15  then -- and math.random(0,math.max(0,100 - dt * 100)) == 0
+  if contactc < 10 and math.random(0,math.max(0,100)) == 0 then 
     
-    for k,v in pairs(levelEntityInfo.enodes) do 
-      local contact
-    end
-
+    local enoden = math.random(1,levelEntityInfo.enodec)
+    local contact = {
+      x = levelEntityInfo.enodes[enoden][1] + .5,
+      y = levelEntityInfo.enodes[enoden][2] + .5,
+      interact = bubble,
+      complete = shop,
+      progress = 0,
+      duration = 2,
+      range = 1,
+      pid = math.random(3,7),
+	  curTarget = {},
+	  cameFrom = getPathNode(levelEntityInfo.nodes,levelEntityInfo.enodes[enoden][1],levelEntityInfo.enodes[enoden][2]),
+	  moveDelay = 0,
+    }
+    contactc = contactc + 1
+    table.insert(entities,contact)
   end
+  
+  for i=1,contactc do
+	local e = entities[i]
+	local targetNode = e.curTarget
+	if not next(e.curTarget) then
+		local rand = math.random(1,e.cameFrom.ct)
+		local tempTarget = e.cameFrom.ts[rand]
+		f:write("aquiring new target: " .. tempTarget[1] .. "," .. tempTarget[2] .. "\r\n")
+		e.curTarget = getPathNode(levelEntityInfo.nodes,tempTarget[1],tempTarget[2])
+	end
+	local tempNodeForDistanceCalc = {}
+	tempNodeForDistanceCalc.x = e.curTarget.n[1] + .5
+	tempNodeForDistanceCalc.y = e.curTarget.n[2] + .5
+	
+	f:write("target: " .. e.curTarget.n[1] .. "," .. e.curTarget.n[2] .. "\r\n")
+	--f:write("distance: " .. distance(tempNodeForDistanceCalc,e) .. "\r\n")
+	
+	if distance(tempNodeForDistanceCalc,e) > .1 then
+		-- run towards it
+		if e.progress <= 0 then
+			local dx = tempNodeForDistanceCalc.x - e.x
+			local dy = tempNodeForDistanceCalc.y - e.y
+			
+			if dx > 0 then
+				dx = math.min(tempNodeForDistanceCalc.x - e.x, .1 * tileSize *  dt)
+			elseif dx < 0 then
+				dx = -math.min(math.abs(tempNodeForDistanceCalc.x - e.x), .1 * tileSize * dt)
+			end
+			
+			if dy > 0 then
+				dy = math.min(tempNodeForDistanceCalc.y - e.y, .1 * tileSize *  dt)
+			elseif dy < 0 then
+				dy = -math.min(math.abs(tempNodeForDistanceCalc.y - e.y), .1 * tileSize * dt)
+			end
+			
+			e.x = e.x + dx
+			e.y = e.y + dy
+		end
+	else
+		if e.moveDelay <= 0 then
+			e.moveDelay = 0
+			e.cameFrom = e.curTarget
+			e.curTarget = {}
+		else
+			e.moveDelay = e.moveDelay - dt
+		end
+	end
+	
+	
+  end
+  
+  
+  
 
   -- check if companion is in line of sight
 	local los = false
