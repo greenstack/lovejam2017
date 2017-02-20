@@ -5,8 +5,7 @@ local mapWidth, mapHeight -- width and height in tiles
 
 local tilesDisplayWidth, tilesDisplayHeight -- number of tiles to show
 
-local tilesetImage
-local tileQuads = {} -- parts of the tileset used for different tiles
+tileQuads = {} -- parts of the tileset used for different tiles
 local tilesetSprite
 local tileSheetDim = 10
 

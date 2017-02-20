@@ -101,10 +101,10 @@ function love.draw()
   --love.graphics.print("PlayerIceCream: "..tostring(player.iceCream), 10, 80)
   love.graphics.setColor(200,200,200,100)
   local visibleNodes = getVisibleNodes()
-  --for k,v in pairs(visibleNodes) do
-  --  local sp = worldToScreenPos(v.x + .5,v.y + .5,mapX,mapY,tileSize)
-	--  love.graphics.circle("fill",sp.x,sp.y,3)
-  --end
+  for k,v in pairs(hiddenNodes) do
+    local sp = worldToScreenPos(v.x, v.y,mapX,mapY,tileSize)
+	  love.graphics.draw(tilesetImage,tileQuads[70],sp.x,sp.y)
+  end
   love.graphics.reset()
   local entityHitboxOffsetX = 10
   local entityHitboxOffsetY = 15
