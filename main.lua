@@ -12,7 +12,7 @@ contact_goal = 10
 
 function love.load()
   level = 1
-  setupMap()
+  setupMap(level)
   setupMapView()
   setupTileSet()
   -- love.graphics.setFont(12)

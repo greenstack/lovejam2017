@@ -10,8 +10,8 @@ local tileQuads = {} -- parts of the tileset used for different tiles
 local tilesetSprite
 local tileSheetDim = 10
 
-function setupMap()
-  mapInfo = require("levelOne")
+function setupMap(level)
+  mapInfo = require("level"..level)
   mapWidth = mapInfo.width
   mapHeight = mapInfo.height
   
