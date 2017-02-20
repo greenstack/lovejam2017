@@ -5,13 +5,12 @@ require("entityhandler")
 require("spriteManager")
 require("uimanager")
 
-obedience_meter = 100
-lose = false
-contacts = 0
-contact_goal = 10
+
+
+level = 1
 
 function love.load()
-  level = 1
+  
   setupMap()
   setupMapView()
   setupTileSet()
@@ -19,13 +18,23 @@ function love.load()
   local initialPlayerPos = {}
   initialPlayerPos.x = 5
   initialPlayerPos.y = 5
+  obedience_meter = 100
+  contacts = 0
+  contact_goal = 10 * level
+  lost = false
   
   initEntityHandler(initialPlayerPos)
   setupCharacterSprites()
 end
 
+
+function lose()
+  lost = true
+  space = false
+end
+
 function love.update(dt)
-  if not lose then
+  if not lost then
 	  local playerSpeed = getPlayer().speed
 	  if up and not space then
 		movePlayer(0, -1 * playerSpeed * tileSize * dt)
@@ -46,6 +55,10 @@ function love.update(dt)
 	  moveMap()
 	  updateEntities(dt, space)
     updateUI()
+  else
+    if space then
+      love.load()
+    end
   end
 
 end
