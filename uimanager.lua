@@ -52,14 +52,14 @@ function drawUI()
       local pieRadius = 20
       local verticalBuffer = 30
       
-      love.graphics.reset()
-      love.graphics.draw(characterPortraitImage, portraitQuads[interaction.entity.pid], ix - borderWidth + portraitSize, iy - bubbleHeight - borderWidth - verticalBuffer)
-      
       love.graphics.setColor(153, 204, 255)
       love.graphics.rectangle("fill",ix - borderWidth,iy - bubbleHeight - borderWidth - verticalBuffer,bubbleWidth + borderWidth,bubbleHeight + borderWidth,15,15)
       love.graphics.setColor(245,245,245)
       love.graphics.rectangle("fill",ix,iy - bubbleHeight - verticalBuffer,bubbleWidth - borderWidth,bubbleHeight - borderWidth,15,15)
       
+      love.graphics.reset()
+      love.graphics.draw(characterPortraitImage, portraitQuads[interaction.entity.pid], ix - borderWidth + portraitSize, iy - bubbleHeight - borderWidth - verticalBuffer)
+
       love.graphics.setColor(0,0,0)
       love.graphics.circle("fill",ix + bubbleWidth / 4, iy - bubbleHeight / 2 - verticalBuffer - 2,pieRadius + borderWidth)
       if interaction.complete then
