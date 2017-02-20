@@ -8,6 +8,10 @@ require("uimanager")
 level = 1
 playlist = {}
 songTime = {}
+levelTransitionTime = 3
+transitionScreen = false
+
+contact_goal = 0
 
 function love.load()
   love.math.setRandomSeed(os.time())
@@ -21,19 +25,15 @@ function love.load()
   songTime[3] = 187
   elapsedSongTime = 0
   songIndex = 1
+  love.audio.stop()
   love.audio.play(playlist[songIndex])
   setupMapView()
   setupTileSet()
   -- love.graphics.setFont(12)
-  local initialPlayerPos = {}
-  initialPlayerPos.x = 5
-  initialPlayerPos.y = 5
   obedience_meter = 100
   contacts = 0
-  contact_goal = 10 * level
   lost = false
-  
-  initEntityHandler(initialPlayerPos)
+  initEntityHandler(level)
   setupCharacterSprites()
 end
 
@@ -44,7 +44,24 @@ function lose()
 end
 
 function love.update(dt)
-  if not lost then
+  if contacts >= contact_goal then
+    nextLevel = true
+    contacts = 0
+    level = level + 1
+  end
+  
+  if nextLevel then
+    if levelTransitionTime <= 0 then
+      transitionScreen = false
+      levelTransitionTime = 3
+      love.load()
+    else
+      levelTransitionTime = levelTransitionTime - dt
+      transitionScreen = true
+    end
+  end
+
+  if not lost and not transitionScreen then
 	  local playerSpeed = getPlayer().speed
 	  if up and not space then
 		movePlayer(0, -1 * playerSpeed * tileSize * dt)
@@ -74,10 +91,13 @@ function love.update(dt)
   if elapsedSongTime >= songTime[songIndex] then
     elapsedSongTime = 0
     songIndex = math.random(1,3)
+    love.audio.stop()
     love.audio.play(playlist[songIndex])
   else
     elapsedSongTime = elapsedSongTime + dt
   end
+  
+  
 
 end
 
