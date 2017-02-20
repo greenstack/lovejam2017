@@ -60,7 +60,7 @@ end
 function setupTileSet()
   tilesetImage = love.graphics.newImage("resources/images/tiles.png")
   tilesetImage:setFilter("nearest", "linear") -- this "linear filter" removes some artifacts if we were to scale the tiles
-  tileSize = mapInfo.tilesize
+  tileSize = mapInfo.tilewidth
 
   tileQuads = {}
 

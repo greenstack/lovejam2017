@@ -66,7 +66,7 @@ function initEntityHandler(initialPlayerPos, level)
     progress = 0,
     duration = 3,
     range = 1.5,
-		pid = 2
+		pid = 1
 	}
   
   entities['companion'] = {
@@ -77,7 +77,7 @@ function initEntityHandler(initialPlayerPos, level)
     progress = 0,
     duration = 1,
     range = 1.5,
-		pid = 3
+		pid = 2
   }
 
 end
