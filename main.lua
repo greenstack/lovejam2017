@@ -5,8 +5,6 @@ require("entityhandler")
 require("spriteManager")
 require("uimanager")
 
-
-
 level = 1
 
 function love.load()
