@@ -87,7 +87,7 @@ function drawUI()
     love.graphics.setColor(10,10,10)
     love.graphics.rectangle("fill",windowX / 2 - 80, windowY / 2 - 40,160,80,20,20)
     love.graphics.setColor(200,200,200)
-    love.graphics.print("Level " .. level + 1,windowX / 2 - 70, windowY / 2 - 30 / 2,0,2,2)
+    love.graphics.print("Level " .. level,windowX / 2 - 70, windowY / 2 - 30 / 2,0,2,2)
     
     
   end

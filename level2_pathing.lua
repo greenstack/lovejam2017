@@ -2,6 +2,7 @@ return {
   start = {25,20},
   cstart = {24,20},
   shop = {10,20},
+  contactGoal = 3,
   enodec = 24,
   enodes = {
     {2,1},
@@ -40,7 +41,7 @@ return {
         {1,10},
         {1,21},
       }
-    }
+    },
     {
       n = {16,3},
       ct = 3,
@@ -445,4 +446,5 @@ return {
         {25,34}
       }
     },
+  }
 }

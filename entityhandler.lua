@@ -35,12 +35,9 @@ local companionPath = {}
 local interaction = {}
 
 function initEntityHandler(level)
-	if level == 1 then
-		levelEntityInfo = require("levelOne_pathing")
+
+		levelEntityInfo = require("level" .. level .. "_pathing")
 	
-	elseif level == 2 then
-		levelEntityInfo = require("levelTwo_pathing")
-	end
 	
 	player.x = levelEntityInfo.start[1] + .5
 	player.y = levelEntityInfo.start[2] + .5
@@ -325,7 +322,7 @@ function updateEntities(dt, isSpacePressed)
 	if los then
 		obedience_meter = math.min(100,obedience_meter + 1 * dt)
 	else
-		obedience_meter = math.max(0,obedience_meter - 0 * dt)
+		obedience_meter = math.max(0,obedience_meter - 10 * dt)
 	end
 	
 	--also handle companion AI
