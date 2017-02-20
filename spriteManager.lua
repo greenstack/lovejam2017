@@ -61,36 +61,36 @@ end
 
 function getShadowIndex(shadowId)
   if shadowId == 0 then
-    return 100
+    return 90
   elseif shadowId == 1 then
-    return 69
-  elseif shadowId == 2 then
-    return 59
-  elseif shadowId == 3 then
-    return 97
-  elseif shadowId == 4 then
-    return 79
-  elseif shadowId == 5 then
-    return 57
-  elseif shadowId == 6 then
-    return 87
-  elseif shadowId == 7 then
-    return 67
-  elseif shadowId == 8 then
-    return 58
-  elseif shadowId == 9 then
-    return 98
-  elseif shadowId == 10 then
-    return 49
-  elseif shadowId == 11 then
-    return 68
-  elseif shadowId == 12 then
-    return 88
-  elseif shadowId == 13 then
-    return 78
-  elseif shadowId == 14 then
-    return 77
-  elseif shadowId == 15 then
     return 70
+  elseif shadowId == 2 then
+    return 58
+  elseif shadowId == 3 then
+    return 98
+  elseif shadowId == 4 then
+    return 69
+  elseif shadowId == 5 then
+    return 58
+  elseif shadowId == 6 then
+    return 88
+  elseif shadowId == 7 then
+    return 68
+  elseif shadowId == 8 then
+    return 60
+  elseif shadowId == 9 then
+    return 99
+  elseif shadowId == 10 then
+    return 50
+  elseif shadowId == 11 then
+    return 78
+  elseif shadowId == 12 then
+    return 89
+  elseif shadowId == 13 then
+    return 79
+  elseif shadowId == 14 then
+    return 69
+  elseif shadowId == 15 then
+    return 100
   end
 end

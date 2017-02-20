@@ -114,16 +114,16 @@ function getShadowId(node, nodes)
 	u = getNodesAt(nodes,node.x,node.y - 1)
 	d = getNodesAt(nodes,node.x,node.y + 1)
 	local shadowId = 0
-	if not next(l) then
+	if next(l) then
 		shadowId = shadowId + 8
 	end
-	if not next(r) then
+	if next(r) then
 		shadowId = shadowId + 2
 	end
-	if not next(u) then
+	if next(u) then
 		shadowId = shadowId + 1
 	end
-	if not next(d) then
+	if next(d) then
 		shadowId = shadowId + 4
 	end
 	return shadowId
