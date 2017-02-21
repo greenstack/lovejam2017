@@ -207,8 +207,8 @@ function getPathNode(nodes,x,y)
 	end
 end
 
-f = love.filesystem.newFile("distance.txt")
-	f:open("w")
+--f = love.filesystem.newFile("distance.txt")
+	--f:open("w")
 
 function updateEntities(dt, isSpacePressed)
 
@@ -234,7 +234,7 @@ function updateEntities(dt, isSpacePressed)
       hidden = false
     }
     
-    f:write("new e at: " .. ",(" .. levelEntityInfo.enodes[enoden][1] .. ", " .. levelEntityInfo.enodes[enoden][2] .. ")\r\n")
+    --f:write("new e at: " .. ",(" .. levelEntityInfo.enodes[enoden][1] .. ", " .. levelEntityInfo.enodes[enoden][2] .. ")\r\n")
     contactc = contactc + 1
     table.insert(entities,contact)
   end
@@ -242,7 +242,7 @@ function updateEntities(dt, isSpacePressed)
   local entitiesToRemove = {}
   for i=1,contactc do
     local e = entities[i]
-    f:write("working with e:" .. e.x .. "," .. e.y ..  "\r\n")
+    --f:write("working with e:" .. e.x .. "," .. e.y ..  "\r\n")
     local targetNode = e.curTarget
     if not next(e.curTarget) then
       local rand = math.random(1,e.cameFrom.ct)
@@ -251,28 +251,28 @@ function updateEntities(dt, isSpacePressed)
         repeat
           rand = math.random(1,e.cameFrom.ct)
           tempTarget = e.cameFrom.ts[rand]
-          f:write("aquiring new target: " .. tempTarget[1] .. "," .. tempTarget[2] .. "\r\n")
-          f:write("comparing to from:   " .. e.cameFrom.n[1] .. "," .. e.cameFrom.n[2] .. "\r\n")
+          --f:write("aquiring new target: " .. tempTarget[1] .. "," .. tempTarget[2] .. "\r\n")
+          --f:write("comparing to from:   " .. e.cameFrom.n[1] .. "," .. e.cameFrom.n[2] .. "\r\n")
           e.curTarget = getPathNode(levelEntityInfo.nodes,tempTarget[1],tempTarget[2])
         until tempTarget[1] ~= e.cameFrom.n[1] or tempTarget[2] ~= e.cameFrom.n[2]
       else
         if not e.justSpawned then
           table.insert(entitiesToRemove,i)
           
-          f:write("removing:   " .. i .. "\r\n")
+          --f:write("removing:   " .. i .. "\r\n")
         end
       end
         e.justSpawned = false
         e.curTarget = getPathNode(levelEntityInfo.nodes,tempTarget[1],tempTarget[2])
     
     end
-    f:write(" t: (" .. e.curTarget.n[1] .. "," .. e.curTarget.n[2] .. "\r\n")
+    --f:write(" t: (" .. e.curTarget.n[1] .. "," .. e.curTarget.n[2] .. "\r\n")
     local tempNodeForDistanceCalc = {}
     tempNodeForDistanceCalc.x = e.curTarget.n[1] + .5
     tempNodeForDistanceCalc.y = e.curTarget.n[2] + .5
     
-    f:write("target: " .. e.curTarget.n[1] .. "," .. e.curTarget.n[2] .. "\r\n")
-    f:write("cameFrom: " .. e.cameFrom.n[1] .. "," .. e.cameFrom.n[2] .. "\r\n")
+    --f:write("target: " .. e.curTarget.n[1] .. "," .. e.curTarget.n[2] .. "\r\n")
+    --f:write("cameFrom: " .. e.cameFrom.n[1] .. "," .. e.cameFrom.n[2] .. "\r\n")
     
     if distance(tempNodeForDistanceCalc,e) > .1 then
       -- run towards it
@@ -365,10 +365,10 @@ function updateEntities(dt, isSpacePressed)
 		--	end
 		end
 		
-		local f = love.filesystem.newFile("ncount.txt")
-		f:open("w")
-		f:write(eHiddenCount .. "," .. eVisibleCount .. "," .. "\r\n")
-		f:close()
+		--local f = love.filesystem.newFile("ncount.txt")
+		--f:open("w")
+		--f:write(eHiddenCount .. "," .. eVisibleCount .. "," .. "\r\n")
+		--f:close()
 		
 			
 		if nPathfindTo then -- companion has found a new place he wants to be...
@@ -388,17 +388,17 @@ function updateEntities(dt, isSpacePressed)
 	if pathFinalPathChannel:getCount() > 0 then
 		companionPath = pathFinalPathChannel:pop()
 		
-		local f = love.filesystem.newFile("path.txt")
-		f:open("w")
+		--local f = love.filesystem.newFile("path.txt")
+		--f:open("w")
 		if companionPath.head then
 			for i = companionPath.head,1,-1 do
-				f:write(nodeToString(companionPath[i]) .. "\r\n")
+				--f:write(nodeToString(companionPath[i]) .. "\r\n")
 			end
 		else
-			f:write("nil path")
+			--f:write("nil path")
 		end
 		
-		f:close()
+		--f:close()
 	end
 	
 	if companionPath[companionPath.head] and entities['companion'].progress == 0 then
