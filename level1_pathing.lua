@@ -2,7 +2,7 @@ return {
   start = {3,3},
   cstart = {3,5},
   shop = {5,15},
-  contactGoal = 1,
+  contactGoal = 5,
   enodec = 14,
   enodes = {
     {1,5},

@@ -13,6 +13,7 @@ transitionScreen = false
 
 contact_goal = 0
 contacts = 0
+last_level = 2
 
 nextLevel = false
 
@@ -29,8 +30,10 @@ function love.load()
   songTime[2] = 150
   playlist[3] = love.audio.newSource("resources/sound/Theme C.ogg")
   songTime[3] = 187
+  playlist[4] = love.audio.newSource("resources/sound/Title Theme.ogg")
+  songTime[4] = 37
   elapsedSongTime = 0
-  songIndex = math.random(1,3)
+  songIndex = 4
     love.audio.stop()
     love.audio.play(playlist[songIndex])
   
@@ -112,14 +115,18 @@ function love.update(dt)
   end
   
   if nextLevel then
-    if levelTransitionTime <= 0 then
-      transitionScreen = false
-      nextLevel = false
-      levelTransitionTime = 1
-      doLevelSetupStuff(level)
+    if level > last_level then
+      win = true
     else
-      levelTransitionTime = levelTransitionTime - dt
-      transitionScreen = true
+      if levelTransitionTime <= 0 then
+        transitionScreen = false
+        nextLevel = false
+        levelTransitionTime = 2
+        doLevelSetupStuff(level)
+      else
+        levelTransitionTime = levelTransitionTime - dt
+        transitionScreen = true
+      end
     end
   end
 
@@ -155,7 +162,7 @@ function love.keyreleased(key,scancode)
 end
 
 function love.draw()
-  if level > 0 then
+  if level > 0  and not win then
     love.graphics.setColor(255,255,255,255)
     love.graphics.draw(tilesetBatch,
       0,0, 0, zoomX, zoomY
@@ -205,7 +212,7 @@ function love.draw()
     end
    
     drawUI()
-  else
+  elseif not win then
     love.graphics.setColor(10,10,180)
     love.graphics.rectangle("fill", 10,10,780,580)
     
@@ -213,15 +220,24 @@ function love.draw()
     love.graphics.rectangle("fill", 80,80,650,460)
     
     love.graphics.setColor(255,0,0)
-    love.graphics.print("TITLE SCREEN",200,100,0,5)
+    love.graphics.print("DUMB MISSIONARY GAME",100,100,0,4)
     
     love.graphics.setColor(255,255,255)
     love.graphics.print("\" ... STAY TOGETHER. Never be alone. [...] Staying together means staying within sight and hearing of each other.\" ",30,30)
     love.graphics.print("~ The Missionary Handbook, page 30",50,50)
     
     love.graphics.setColor(255,200,200)
-    love.graphics.print("",40,300)
-    love.graphics.print("Talk to people by pressing spacebar. Try to fulfil your goal for daily contacts",50,50)
+    love.graphics.print("Talk to people by pressing spacebar. Try to fulfil your goal for daily contacts",100,300)
+    love.graphics.print("You appear to have done something to upset your companion. He is trying to get away from you",100,330)
+    love.graphics.print("Your companion might like you better if you give him his favorite treat, ice cream",100,360)
+    love.graphics.print("You might be able to buy some from the mysterious person at the shop",100,390)
+    
+  elseif win then
+    love.graphics.setColor(10,10,180)
+    love.graphics.rectangle("fill", 10,10,780,580)
+    
+     love.graphics.setColor(255,0,0)
+    love.graphics.print("YOU WIN",200,100,0,5)
   end
 end
 
