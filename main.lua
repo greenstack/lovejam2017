@@ -247,7 +247,7 @@ function love.draw()
     love.graphics.setColor(10,10,180)
     love.graphics.rectangle("fill", 10,10,780,580)
     
-     love.graphics.reset
+     love.graphics.reset()
     love.graphics.draw(winimg,200,100)
   end
 end
