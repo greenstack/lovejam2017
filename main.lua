@@ -13,7 +13,7 @@ transitionScreen = false
 
 contact_goal = 0
 contacts = 0
-last_level = 2
+last_level = 1
 
 nextLevel = false
 
@@ -235,10 +235,10 @@ function love.draw()
     love.graphics.print("\" ... STAY TOGETHER. Never be alone. [...] Staying together means staying within sight and hearing of each other.\" ",30,30)
     love.graphics.print("~ The Missionary Handbook, page 30",50,50)
     
-    love.graphics.setColor(0,0,0)
-    love.graphics.print("Talk to people by pressing spacebar. Try to fulfil your goal for daily contacts.",100,300)
-    love.graphics.print("You appear to have done something to upset your companion. He is trying to get away from you.",100,330)
-    love.graphics.print("Your companion might like you better if you give him his favorite treat, ice cream.",100,360)
+    love.graphics.setColor(16,20,20)
+    love.graphics.print("Talk to people by pressing spacebar. Try to fulfill your goal for daily contacts",100,300)
+    love.graphics.print("You appear to have done something to upset your companion. He is trying to get away from you",100,330)
+    love.graphics.print("Your companion might like you better if you give him his favorite treat, ice cream",100,360)
     love.graphics.print("You might be able to buy some from the mysterious person at the shop",100,390)
 
 
@@ -253,8 +253,8 @@ function love.draw()
 end
 
 function love.threaderror(thread,err)
-	local f = love.filesystem.newFile("threaderr.txt")
-	f:open("w")
-	f:write(err .. "\r\n")
-	f:close()
+	--local f = love.filesystem.newFile("threaderr.txt")
+	--f:open("w")
+	--f:write(err .. "\r\n")
+	--f:close()
 end

@@ -35,8 +35,11 @@ local companionPath = {}
 local interaction = {}
 
 function initEntityHandler(level)
+  entities = {}
+  contactc = 0
+  interaction = {}
 
-		levelEntityInfo = require("level" .. level .. "_pathing")
+	levelEntityInfo = require("level" .. level .. "_pathing")
 	
 	
 	player.x = levelEntityInfo.start[1] + .5
@@ -46,7 +49,7 @@ function initEntityHandler(level)
 	player.height = 16
 	player.direction = dFront
 	player.iceCream = false
-	player.cash = 5
+	player.cash = 20
 	
 	contact_goal = levelEntityInfo.contactGoal
 
@@ -204,8 +207,8 @@ function getPathNode(nodes,x,y)
 	end
 end
 
-f = love.filesystem.newFile("distance.txt")
-	f:open("w")
+--f = love.filesystem.newFile("distance.txt")
+	--f:open("w")
 
 function updateEntities(dt, isSpacePressed)
 
@@ -223,87 +226,91 @@ function updateEntities(dt, isSpacePressed)
       duration = 2,
       range = 1,
       pid = math.random(3,7),
-	  curTarget = {},
-	  cameFrom = getPathNode(levelEntityInfo.nodes,levelEntityInfo.enodes[enoden][1],levelEntityInfo.enodes[enoden][2]),
-	  moveDelay = 0,
-	  contacted = false,
-	  justSpawned = true,
-    hidden = false
+      curTarget = {},
+      cameFrom = getPathNode(levelEntityInfo.nodes,levelEntityInfo.enodes[enoden][1],levelEntityInfo.enodes[enoden][2]),
+      moveDelay = 0,
+      contacted = false,
+      justSpawned = true,
+      hidden = false
     }
+    
+    --f:write("new e at: " .. ",(" .. levelEntityInfo.enodes[enoden][1] .. ", " .. levelEntityInfo.enodes[enoden][2] .. ")\r\n")
     contactc = contactc + 1
     table.insert(entities,contact)
   end
   
   local entitiesToRemove = {}
   for i=1,contactc do
-	local e = entities[i]
-	local targetNode = e.curTarget
-	if not next(e.curTarget) then
-		local rand = math.random(1,e.cameFrom.ct)
-		local tempTarget = e.cameFrom.ts[rand]
-		if e.cameFrom.ct > 1 then
-			repeat
-				rand = math.random(1,e.cameFrom.ct)
-				tempTarget = e.cameFrom.ts[rand]
-				--f:write("aquiring new target: " .. tempTarget[1] .. "," .. tempTarget[2] .. "\r\n")
-				--f:write("comparing to from:   " .. e.cameFrom.n[1] .. "," .. e.cameFrom.n[2] .. "\r\n")
-				e.curTarget = getPathNode(levelEntityInfo.nodes,tempTarget[1],tempTarget[2])
-			until tempTarget[1] ~= e.cameFrom.n[1] or tempTarget[2] ~= e.cameFrom.n[2]
-		else
-			if not e.justSpawned then
-				table.insert(entitiesToRemove,i)
-				
-				f:write("removing:   " .. i .. "\r\n")
-			end
-		end
-			e.justSpawned = false
-			e.curTarget = getPathNode(levelEntityInfo.nodes,tempTarget[1],tempTarget[2])
-	
-	end
-	local tempNodeForDistanceCalc = {}
-	tempNodeForDistanceCalc.x = e.curTarget.n[1] + .5
-	tempNodeForDistanceCalc.y = e.curTarget.n[2] + .5
-	
-	f:write("target: " .. e.curTarget.n[1] .. "," .. e.curTarget.n[2] .. "\r\n")
-	--f:write("distance: " .. distance(tempNodeForDistanceCalc,e) .. "\r\n")
-	
-	if distance(tempNodeForDistanceCalc,e) > .1 then
-		-- run towards it
-		if e.progress <= 0 then
-			local dx = tempNodeForDistanceCalc.x - e.x
-			local dy = tempNodeForDistanceCalc.y - e.y
-			
-			if dx > 0 then
-				dx = math.min(tempNodeForDistanceCalc.x - e.x, .1 * tileSize *  dt)
-			elseif dx < 0 then
-				dx = -math.min(math.abs(tempNodeForDistanceCalc.x - e.x), .1 * tileSize * dt)
-			end
-			
-			if dy > 0 then
-				dy = math.min(tempNodeForDistanceCalc.y - e.y, .1 * tileSize *  dt)
-			elseif dy < 0 then
-				dy = -math.min(math.abs(tempNodeForDistanceCalc.y - e.y), .1 * tileSize * dt)
-			end
-			
-			e.x = e.x + dx
-			e.y = e.y + dy
-		end
-	else
-		if e.moveDelay <= 0 then
-			e.moveDelay = math.random(2,7 - level)
-			e.cameFrom = e.curTarget
-			e.curTarget = {}
-		else
-			e.moveDelay = e.moveDelay - dt
-		end
-	end
+    local e = entities[i]
+    --f:write("working with e:" .. e.x .. "," .. e.y ..  "\r\n")
+    local targetNode = e.curTarget
+    if not next(e.curTarget) then
+      local rand = math.random(1,e.cameFrom.ct)
+      local tempTarget = e.cameFrom.ts[rand]
+      if e.cameFrom.ct > 1 then
+        repeat
+          rand = math.random(1,e.cameFrom.ct)
+          tempTarget = e.cameFrom.ts[rand]
+          --f:write("aquiring new target: " .. tempTarget[1] .. "," .. tempTarget[2] .. "\r\n")
+          --f:write("comparing to from:   " .. e.cameFrom.n[1] .. "," .. e.cameFrom.n[2] .. "\r\n")
+          e.curTarget = getPathNode(levelEntityInfo.nodes,tempTarget[1],tempTarget[2])
+        until tempTarget[1] ~= e.cameFrom.n[1] or tempTarget[2] ~= e.cameFrom.n[2]
+      else
+        if not e.justSpawned then
+          table.insert(entitiesToRemove,i)
+          
+          --f:write("removing:   " .. i .. "\r\n")
+        end
+      end
+        e.justSpawned = false
+        e.curTarget = getPathNode(levelEntityInfo.nodes,tempTarget[1],tempTarget[2])
+    
+    end
+    --f:write(" t: (" .. e.curTarget.n[1] .. "," .. e.curTarget.n[2] .. "\r\n")
+    local tempNodeForDistanceCalc = {}
+    tempNodeForDistanceCalc.x = e.curTarget.n[1] + .5
+    tempNodeForDistanceCalc.y = e.curTarget.n[2] + .5
+    
+    --f:write("target: " .. e.curTarget.n[1] .. "," .. e.curTarget.n[2] .. "\r\n")
+    --f:write("cameFrom: " .. e.cameFrom.n[1] .. "," .. e.cameFrom.n[2] .. "\r\n")
+    
+    if distance(tempNodeForDistanceCalc,e) > .1 then
+      -- run towards it
+      if e.progress <= 0 then
+        local dx = tempNodeForDistanceCalc.x - e.x
+        local dy = tempNodeForDistanceCalc.y - e.y
+        
+        if dx > 0 then
+          dx = math.min(tempNodeForDistanceCalc.x - e.x, .1 * tileSize *  dt)
+        elseif dx < 0 then
+          dx = -math.min(math.abs(tempNodeForDistanceCalc.x - e.x), .1 * tileSize * dt)
+        end
+        
+        if dy > 0 then
+          dy = math.min(tempNodeForDistanceCalc.y - e.y, .1 * tileSize *  dt)
+        elseif dy < 0 then
+          dy = -math.min(math.abs(tempNodeForDistanceCalc.y - e.y), .1 * tileSize * dt)
+        end
+        
+        e.x = e.x + dx
+        e.y = e.y + dy
+      end
+    else
+      if e.moveDelay <= 0 then
+        e.moveDelay = math.random(2,7 - level)
+        e.cameFrom = e.curTarget
+        e.curTarget = {}
+      else
+        e.moveDelay = e.moveDelay - dt
+      end
+    end
   end
   
   local fudge = 0
   for k,v in pairs(entitiesToRemove) do
-	contactc = contactc - 1
-	table.remove(entities,v + fudge)
-	fudge = fudge + 1
+    contactc = contactc - 1
+    table.remove(entities,v + fudge)
+    fudge = fudge + 1
   end
   
   
@@ -358,10 +365,10 @@ function updateEntities(dt, isSpacePressed)
 		--	end
 		end
 		
-		local f = love.filesystem.newFile("ncount.txt")
-		f:open("w")
-		f:write(eHiddenCount .. "," .. eVisibleCount .. "," .. "\r\n")
-		f:close()
+		--local f = love.filesystem.newFile("ncount.txt")
+		--f:open("w")
+		--f:write(eHiddenCount .. "," .. eVisibleCount .. "," .. "\r\n")
+		--f:close()
 		
 			
 		if nPathfindTo then -- companion has found a new place he wants to be...
@@ -381,17 +388,17 @@ function updateEntities(dt, isSpacePressed)
 	if pathFinalPathChannel:getCount() > 0 then
 		companionPath = pathFinalPathChannel:pop()
 		
-		local f = love.filesystem.newFile("path.txt")
-		f:open("w")
+		--local f = love.filesystem.newFile("path.txt")
+		--f:open("w")
 		if companionPath.head then
 			for i = companionPath.head,1,-1 do
-				f:write(nodeToString(companionPath[i]) .. "\r\n")
+				--f:write(nodeToString(companionPath[i]) .. "\r\n")
 			end
 		else
-			f:write("nil path")
+			--f:write("nil path")
 		end
 		
-		f:close()
+		--f:close()
 	end
 	
 	if companionPath[companionPath.head] and entities['companion'].progress == 0 then

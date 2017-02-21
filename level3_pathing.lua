@@ -2,6 +2,7 @@ return {
   start = {30,25},
   cstart = {29,25},
   shop = {15,25},
+  contactGoal = 3,
   enodec = 26,
   enodes = {
     {40,12}, --existence verified
@@ -23,13 +24,13 @@ return {
     {1,32}, --verified
     {1,44}, --verified
     {21,45}, --verified
-    {26,45}, --verified
-    {37,44}, --verified
-    {29,44}, --verified
-    {45,44}, --verified
-    {45,39}, --verified & fixed
-    {45,32}, --verified
-    {45,27} --verified
+    {26,45},
+    {37,44},
+    {29,44},
+    {45,44},
+    {45,39},
+    {45,32},
+    {45,27}
   },
   nodes = {
     {
@@ -214,7 +215,7 @@ return {
       n = {45,39},
       c = 1,
       ts = {
-        {43,39}
+        {45,39}
       }
     },
     {
@@ -230,7 +231,7 @@ return {
       ts = {
         {31,13}
       }
-    }
+    },
     {
       n = {31,13},
       ct = 3,
