@@ -18,14 +18,14 @@ last_level = 2
 nextLevel = false
 
 function love.load()
+  logoImage = love.graphics.newImage("resources/images/logo.png");
   love.math.setRandomSeed(os.time())
   math.randomseed(os.time())
   
   --doLevelSetupStuff(level)
-  
+  love.audio.setVolume(.6)
   playlist[1] = love.audio.newSource("resources/sound/Theme A.ogg")
   songTime[1] = 226
-  playlist[1]:setVolume(.6)
   playlist[2] = love.audio.newSource("resources/sound/Theme B.ogg")
   songTime[2] = 150
   playlist[3] = love.audio.newSource("resources/sound/Theme C.ogg")
@@ -35,10 +35,7 @@ function love.load()
   elapsedSongTime = 0
   songIndex = 4
     love.audio.stop()
-    love.audio.play(playlist[songIndex])
-  
-  -- love.graphics.setFont(12)
-  
+    love.audio.play(playlist[songIndex]) 
   
 end
 
@@ -207,8 +204,6 @@ function love.draw()
     if companionHidden == false then
       love.graphics.draw(characterSetImage, characterQuads[companionQPos][companion.direction], companionScreenPos.x - entityHitboxOffsetX, companionScreenPos.y - entityHitboxOffsetY, 0, entityScale, entityScale)
     end
-
-    love.graphics.setColor(0,255,255)
     
     for i=1,contactc do
       for k,v in pairs(hiddenNodes) do
@@ -220,19 +215,20 @@ function love.draw()
       end
       if not entities[i].hidden then
         local sp = worldToScreenPos(entities[i].x,entities[i].y,mapX,mapY,tileSize)
-        love.graphics.circle("fill",sp.x,sp.y,5)
+        love.graphics.draw(characterSetImage, characterQuads[entities[i].pid][1], sp.x - entityHitboxOffsetX, sp.y - entityHitboxOffsetY, 0, entityScale, entityScale)
       end
     end
     drawUI()
   elseif not win then
-    love.graphics.setColor(10,10,180)
+    love.graphics.reset()
+    love.graphics.setColor(96,96,96)
     love.graphics.rectangle("fill", 10,10,780,580)
     
-    love.graphics.setColor(10,100,80)
+    love.graphics.setColor(250,250,250)
     love.graphics.rectangle("fill", 80,80,650,460)
     
-    love.graphics.setColor(255,0,0)
-    love.graphics.print("DUMB MISSIONARY GAME",100,100,0,4)
+    love.graphics.reset()
+    love.graphics.draw(logoImage,150,100)
     
     love.graphics.setColor(255,255,255)
     love.graphics.print("\" ... STAY TOGETHER. Never be alone. [...] Staying together means staying within sight and hearing of each other.\" ",30,30)
@@ -243,6 +239,8 @@ function love.draw()
     love.graphics.print("You appear to have done something to upset your companion. He is trying to get away from you",100,330)
     love.graphics.print("Your companion might like you better if you give him his favorite treat, ice cream",100,360)
     love.graphics.print("You might be able to buy some from the mysterious person at the shop",100,390)
+
+
     
   elseif win then
     love.graphics.setColor(10,10,180)

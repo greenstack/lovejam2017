@@ -2,28 +2,27 @@ return {
   start = {30,25},
   cstart = {29,25},
   shop = {15,25},
-  enodec = 27,
+  enodec = 26,
   enodes = {
-    {40,12}, 
-    {31,12},
-    {19,7},
-    {11,26},
-    {17,26},
-    {29,38},
-    {31,30}, 
-    {18,39},
-    {20,34},
-    {14,39},
-    {10,39},
-    {1,5},
-    {21,1},
-    {26,1},
-    {36,1},
-    {1,15},
-    {1,27},
-    {1,32},
-    {1,44},
-    {21,45},
+    {40,12}, --existence verified
+    {31,12}, --existence verified
+    {20,8}, --existence verified
+    {11,26}, --existence verified and existence proven
+    {17,26}, --existence verified and corrected
+    {30,39}, -- existence verified and corrected
+    {18,39}, --verified
+    {20,34}, --verified
+    {14,39}, --verified
+    {10,39}, --verified
+    {1,5}, --verified
+    {21,1}, --verified
+    {26,1}, --verified
+    {36,1}, --verified
+    {1,15}, --verified
+    {1,27}, --verified
+    {1,32}, --verified
+    {1,44}, --verified
+    {21,45}, --verified
     {26,45},
     {37,44},
     {29,44},
@@ -208,7 +207,7 @@ return {
       ts = {
         {43,32},
         {45,39},
-        {30,29}
+        {30,38}
       }
     },
     {
@@ -225,6 +224,13 @@ return {
         {30,13}
       }
     },
+    {
+      n = {31,12},
+      ct = 1,
+      ts = {
+        {31,13}
+      }
+    }
     {
       n = {31,13},
       ct = 3,
@@ -246,7 +252,8 @@ return {
       c = 2,
       ts = {
         {39,13},
-        {44,13}
+        {44,13},
+        {40,12}
       }
     },
     {
@@ -324,7 +331,7 @@ return {
       n = {11,27},
       ct = 3,
       ts = {
-        {11,22},
+        {11,26},
         {8,23},
         {15,27},
       }
@@ -377,6 +384,13 @@ return {
         {15,27},
         {21,27},
         {17,26},
+      }
+    },
+    {
+      n = {17,26},
+      ct = 1,
+      ts = {
+        {17,27}
       }
     },
     {
