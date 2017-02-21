@@ -18,6 +18,7 @@ last_level = 2
 nextLevel = false
 
 function love.load()
+  logoImage = love.graphics.newImage("resources/images/logo.png");
   love.math.setRandomSeed(os.time())
   math.randomseed(os.time())
   
@@ -84,7 +85,7 @@ function love.update(dt)
       updateUI()
     else
       if space then
-        level = 0
+        level = 1
         doLevelSetupStuff(level)
       end
     end
@@ -192,6 +193,9 @@ function love.draw()
       --love.graphics.print(shadowIndex, sp.x, sp.y)
       --love.graphics.print(tostring(companionHidden),10,90)
     end
+    
+    
+    
     love.graphics.reset()
     local entityHitboxOffsetX = 10
     local entityHitboxOffsetY = 15
@@ -200,32 +204,43 @@ function love.draw()
     if companionHidden == false then
       love.graphics.draw(characterSetImage, characterQuads[companionQPos][companion.direction], companionScreenPos.x - entityHitboxOffsetX, companionScreenPos.y - entityHitboxOffsetY, 0, entityScale, entityScale)
     end
-
+    
     for i=1,contactc do
-      local sp = worldToScreenPos(entities[i].x,entities[i].y,mapX,mapY,tileSize)
-      love.graphics.draw(characterSetImage, characterQuads[entities[i].pid][1], sp.x, sp.y, 0, entityScale, entityScale)
+      for k,v in pairs(hiddenNodes) do
+        if v.x == math.floor(entities[i].x - .5) and v.y == math.floor(entities[i].y - .5) then
+          entities[i].hidden = true
+          break
+        end
+          entities[i].hidden = false
+      end
+      if not entities[i].hidden then
+        local sp = worldToScreenPos(entities[i].x,entities[i].y,mapX,mapY,tileSize)
+        love.graphics.draw(characterSetImage, characterQuads[entities[i].pid][1], sp.x - entityHitboxOffsetX, sp.y - entityHitboxOffsetY, 0, entityScale, entityScale)
+      end
     end
-   
     drawUI()
   elseif not win then
-    love.graphics.setColor(10,10,180)
+    love.graphics.reset()
+    love.graphics.setColor(96,96,96)
     love.graphics.rectangle("fill", 10,10,780,580)
     
-    love.graphics.setColor(10,100,80)
+    love.graphics.setColor(250,250,250)
     love.graphics.rectangle("fill", 80,80,650,460)
     
-    love.graphics.setColor(255,0,0)
-    love.graphics.print("DUMB MISSIONARY GAME",100,100,0,4)
+    love.graphics.reset()
+    love.graphics.draw(logoImage,150,100)
     
     love.graphics.setColor(255,255,255)
     love.graphics.print("\" ... STAY TOGETHER. Never be alone. [...] Staying together means staying within sight and hearing of each other.\" ",30,30)
     love.graphics.print("~ The Missionary Handbook, page 30",50,50)
     
-    love.graphics.setColor(255,200,200)
-    love.graphics.print("Talk to people by pressing spacebar. Try to fulfil your goal for daily contacts",100,300)
-    love.graphics.print("You appear to have done something to upset your companion. He is trying to get away from you",100,330)
-    love.graphics.print("Your companion might like you better if you give him his favorite treat, ice cream",100,360)
+    love.graphics.setColor(0,0,0)
+    love.graphics.print("Talk to people by pressing spacebar. Try to fulfil your goal for daily contacts.",100,300)
+    love.graphics.print("You appear to have done something to upset your companion. He is trying to get away from you.",100,330)
+    love.graphics.print("Your companion might like you better if you give him his favorite treat, ice cream.",100,360)
     love.graphics.print("You might be able to buy some from the mysterious person at the shop",100,390)
+
+
     
   elseif win then
     love.graphics.setColor(10,10,180)

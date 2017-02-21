@@ -227,7 +227,8 @@ function updateEntities(dt, isSpacePressed)
 	  cameFrom = getPathNode(levelEntityInfo.nodes,levelEntityInfo.enodes[enoden][1],levelEntityInfo.enodes[enoden][2]),
 	  moveDelay = 0,
 	  contacted = false,
-	  justSpawned = true
+	  justSpawned = true,
+    hidden = false
     }
     contactc = contactc + 1
     table.insert(entities,contact)
