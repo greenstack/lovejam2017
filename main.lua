@@ -239,7 +239,7 @@ function love.draw()
     love.graphics.print("~ The Missionary Handbook, page 30",50,50)
     
     love.graphics.setColor(255,200,200)
-    love.graphics.print("Talk to people by pressing spacebar. Try to fulfil your goal for daily contacts",100,300)
+    love.graphics.print("Talk to people by pressing spacebar. Try to fulfill your goal for daily contacts",100,300)
     love.graphics.print("You appear to have done something to upset your companion. He is trying to get away from you",100,330)
     love.graphics.print("Your companion might like you better if you give him his favorite treat, ice cream",100,360)
     love.graphics.print("You might be able to buy some from the mysterious person at the shop",100,390)
