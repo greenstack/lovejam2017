@@ -88,7 +88,7 @@ function love.update(dt)
       updateUI()
     else
       if space then
-        level = 0
+        level = 1
         doLevelSetupStuff(level)
       end
     end
@@ -196,6 +196,9 @@ function love.draw()
       --love.graphics.print(shadowIndex, sp.x, sp.y)
       --love.graphics.print(tostring(companionHidden),10,90)
     end
+    
+    
+    
     love.graphics.reset()
     local entityHitboxOffsetX = 10
     local entityHitboxOffsetY = 15
@@ -206,11 +209,20 @@ function love.draw()
     end
 
     love.graphics.setColor(0,255,255)
+    
     for i=1,contactc do
-    local sp = worldToScreenPos(entities[i].x,entities[i].y,mapX,mapY,tileSize)
-      love.graphics.circle("fill",sp.x,sp.y,5)
+      for k,v in pairs(hiddenNodes) do
+        if v.x == math.floor(entities[i].x - .5) and v.y == math.floor(entities[i].y - .5) then
+          entities[i].hidden = true
+          break
+        end
+          entities[i].hidden = false
+      end
+      if not entities[i].hidden then
+        local sp = worldToScreenPos(entities[i].x,entities[i].y,mapX,mapY,tileSize)
+        love.graphics.circle("fill",sp.x,sp.y,5)
+      end
     end
-   
     drawUI()
   elseif not win then
     love.graphics.setColor(10,10,180)
