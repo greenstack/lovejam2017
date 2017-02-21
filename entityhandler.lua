@@ -49,7 +49,7 @@ function initEntityHandler(level)
 	player.height = 16
 	player.direction = dFront
 	player.iceCream = false
-	player.cash = 5
+	player.cash = 20
 	
 	contact_goal = levelEntityInfo.contactGoal
 
