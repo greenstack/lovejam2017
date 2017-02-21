@@ -23,13 +23,13 @@ return {
     {1,32}, --verified
     {1,44}, --verified
     {21,45}, --verified
-    {26,45},
-    {37,44},
-    {29,44},
-    {45,44},
-    {45,49},
-    {45,32},
-    {45,27}
+    {26,45}, --verified
+    {37,44}, --verified
+    {29,44}, --verified
+    {45,44}, --verified
+    {45,39}, --verified & fixed
+    {45,32}, --verified
+    {45,27} --verified
   },
   nodes = {
     {
@@ -214,7 +214,7 @@ return {
       n = {45,39},
       c = 1,
       ts = {
-        {45,39}
+        {43,39}
       }
     },
     {
