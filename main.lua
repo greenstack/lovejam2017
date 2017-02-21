@@ -22,10 +22,9 @@ function love.load()
   math.randomseed(os.time())
   
   --doLevelSetupStuff(level)
-  
+  love.audio.setVolume(.6)
   playlist[1] = love.audio.newSource("resources/sound/Theme A.ogg")
   songTime[1] = 226
-  playlist[1]:setVolume(.6)
   playlist[2] = love.audio.newSource("resources/sound/Theme B.ogg")
   songTime[2] = 150
   playlist[3] = love.audio.newSource("resources/sound/Theme C.ogg")
@@ -35,10 +34,7 @@ function love.load()
   elapsedSongTime = 0
   songIndex = 4
     love.audio.stop()
-    love.audio.play(playlist[songIndex])
-  
-  -- love.graphics.setFont(12)
-  
+    love.audio.play(playlist[songIndex]) 
   
 end
 
@@ -205,10 +201,9 @@ function love.draw()
       love.graphics.draw(characterSetImage, characterQuads[companionQPos][companion.direction], companionScreenPos.x - entityHitboxOffsetX, companionScreenPos.y - entityHitboxOffsetY, 0, entityScale, entityScale)
     end
 
-    love.graphics.setColor(0,255,255)
     for i=1,contactc do
-    local sp = worldToScreenPos(entities[i].x,entities[i].y,mapX,mapY,tileSize)
-      love.graphics.circle("fill",sp.x,sp.y,5)
+      local sp = worldToScreenPos(entities[i].x,entities[i].y,mapX,mapY,tileSize)
+      love.graphics.draw(characterSetImage, characterQuads[entities[i].pid][1], sp.x, sp.y, 0, entityScale, entityScale)
     end
    
     drawUI()
