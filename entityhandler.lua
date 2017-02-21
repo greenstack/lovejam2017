@@ -34,28 +34,33 @@ local companionPath = {}
 
 local interaction = {}
 
-function initEntityHandler(initialPlayerPos, level)
-	player.x = initialPlayerPos.x + .5
-	player.y = initialPlayerPos.y + .5
+function initEntityHandler(level)
+
+		levelEntityInfo = require("level" .. level .. "_pathing")
+	
+	
+	player.x = levelEntityInfo.start[1] + .5
+	player.y = levelEntityInfo.start[2] + .5
 	player.speed = .2
 	player.width = 16
 	player.height = 16
 	player.direction = dFront
 	player.iceCream = false
 	player.cash = 5
+	
+	contact_goal = levelEntityInfo.contactGoal
 
 	local node = isOnNode(getNodes(),player)
 	player.nodeX = node.x
 	player.nodeY = node.y
 	
-	companion.x = initialPlayerPos.x + .5 + 3
-	companion.y = initialPlayerPos.y + .5 + 1
+	companion.x = levelEntityInfo.cstart[1] + .5
+	companion.y = levelEntityInfo.cstart[2] + .5 
 	companion.speed = .2	
 	companion.timer = 0
 	companion.direction = dFront
   
-  levelEntityInfo = require("levelOne_pathing")
-  entityc = 0
+	entityc = 0
 	
 	sightPlayerNodeChannel = love.thread.getChannel("sightPlayerChan")
 	sightNodesChannel = love.thread.getChannel("sightNodesChan")
@@ -68,8 +73,8 @@ function initEntityHandler(initialPlayerPos, level)
 	pathThread = love.thread.newThread("pathfindthread.lua")
 
 	entities['shop'] = {
-		x = 5,
-		y = 16,
+		x = levelEntityInfo.shop[1],
+		y = levelEntityInfo.shop[2],
     interact = bubble,
     complete = shop,
     progress = 0,
@@ -222,19 +227,37 @@ function updateEntities(dt, isSpacePressed)
 	  cameFrom = getPathNode(levelEntityInfo.nodes,levelEntityInfo.enodes[enoden][1],levelEntityInfo.enodes[enoden][2]),
 	  moveDelay = 0,
 	  contacted = false,
+	  justSpawned = true
     }
     contactc = contactc + 1
     table.insert(entities,contact)
   end
   
+  local entitiesToRemove = {}
   for i=1,contactc do
 	local e = entities[i]
 	local targetNode = e.curTarget
 	if not next(e.curTarget) then
 		local rand = math.random(1,e.cameFrom.ct)
 		local tempTarget = e.cameFrom.ts[rand]
-		f:write("aquiring new target: " .. tempTarget[1] .. "," .. tempTarget[2] .. "\r\n")
-		e.curTarget = getPathNode(levelEntityInfo.nodes,tempTarget[1],tempTarget[2])
+		if e.cameFrom.ct > 1 then
+			repeat
+				rand = math.random(1,e.cameFrom.ct)
+				tempTarget = e.cameFrom.ts[rand]
+				--f:write("aquiring new target: " .. tempTarget[1] .. "," .. tempTarget[2] .. "\r\n")
+				--f:write("comparing to from:   " .. e.cameFrom.n[1] .. "," .. e.cameFrom.n[2] .. "\r\n")
+				e.curTarget = getPathNode(levelEntityInfo.nodes,tempTarget[1],tempTarget[2])
+			until tempTarget[1] ~= e.cameFrom.n[1] or tempTarget[2] ~= e.cameFrom.n[2]
+		else
+			if not e.justSpawned then
+				table.insert(entitiesToRemove,i)
+				
+				f:write("removing:   " .. i .. "\r\n")
+			end
+		end
+			e.justSpawned = false
+			e.curTarget = getPathNode(levelEntityInfo.nodes,tempTarget[1],tempTarget[2])
+	
 	end
 	local tempNodeForDistanceCalc = {}
 	tempNodeForDistanceCalc.x = e.curTarget.n[1] + .5
@@ -266,15 +289,20 @@ function updateEntities(dt, isSpacePressed)
 		end
 	else
 		if e.moveDelay <= 0 then
-			e.moveDelay = 0
+			e.moveDelay = math.random(2,7 - level)
 			e.cameFrom = e.curTarget
 			e.curTarget = {}
 		else
 			e.moveDelay = e.moveDelay - dt
 		end
 	end
-	
-	
+  end
+  
+  local fudge = 0
+  for k,v in pairs(entitiesToRemove) do
+	contactc = contactc - 1
+	table.remove(entities,v + fudge)
+	fudge = fudge + 1
   end
   
   
@@ -294,7 +322,7 @@ function updateEntities(dt, isSpacePressed)
 	if los then
 		obedience_meter = math.min(100,obedience_meter + 1 * dt)
 	else
-		obedience_meter = math.max(0,obedience_meter - 0 * dt)
+		obedience_meter = math.max(0,obedience_meter - 10 * dt)
 	end
 	
 	--also handle companion AI

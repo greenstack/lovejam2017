@@ -2,6 +2,7 @@ return {
   start = {25,20},
   cstart = {24,20},
   shop = {10,20},
+  contactGoal = 3,
   enodec = 23,
   enodes = {
     {2,1}, --en

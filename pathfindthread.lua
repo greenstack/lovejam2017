@@ -19,9 +19,9 @@ end
 function pathfindTo(startNode,endNode)
 	local startTime = love.timer.getTime()
 	
-	f = love.filesystem.newFile("pathlog.txt")
-	f:open("w")
-	f:write("Path from " .. nodeToString(startNode) .. " to " .. nodeToString(endNode) .. "\r\n")
+	--f = love.filesystem.newFile("pathlog.txt")
+	--f:open("w")
+	--f:write("Path from " .. nodeToString(startNode) .. " to " .. nodeToString(endNode) .. "\r\n")
 	
 	startNode.p_cost = 0
 	startNode.h_cost = distance(startNode,endNode)
@@ -34,15 +34,15 @@ function pathfindTo(startNode,endNode)
 		local cNode = queue[keyOfNextNode]
 		table.remove(queue,keyOfNextNode)
 		table.insert(checked,cNode)
-		f:write("checking " .. nodeToString(cNode) .. "\r\n")
+		--f:write("checking " .. nodeToString(cNode) .. "\r\n")
 		if distance(cNode,endNode) == 0 then -- found the end
 			--build return trail
 			local path = {}
 			local step = cNode
-			f:write("final step was " .. nodeToString(step.parent) .. nodeToString(step) .. "\r\n")
+			--f:write("final step was " .. nodeToString(step.parent) .. nodeToString(step) .. "\r\n")
 			local count = 0
 			while step.parent do
-				f:write("adding to final path  - " .. count .. ":" .. nodeToString(step) .. "\r\n")
+				--f:write("adding to final path  - " .. count .. ":" .. nodeToString(step) .. "\r\n")
 				count = count + 1
 				path[count] = step
 				--table.insert(path,step)
@@ -51,14 +51,14 @@ function pathfindTo(startNode,endNode)
 			path.head = count
 			local endTime = love.timer.getTime()
 			local totalTime = endTime - startTime
-			f:write("took " .. totalTime .. "seconds" .. "\r\n")
-			f:write("debug info: " .. nodeToString(path[1]).. "\r\n")
-			f:close()
+			--f:write("took " .. totalTime .. "seconds" .. "\r\n")
+			--f:write("debug info: " .. nodeToString(path[1]).. "\r\n")
+			--f:close()
 			return path
 		end
 		for k,v in pairs(getNeighbors(nodes,cNode)) do
 			if not elementOf(v,checked) then
-				f:write("  exploring neighbor " .. nodeToString(v) .. "\r\n")
+				--f:write("  exploring neighbor " .. nodeToString(v) .. "\r\n")
 				
 				if cNode.p_cost + 1.4 < v.p_cost or not elementOf(v,queue) then
 					if distance(v,cNode) > 1 then
@@ -76,7 +76,7 @@ function pathfindTo(startNode,endNode)
 				end
 				
 			else
-				f:write("  " .. nodeToString(v) .. "already checked\r\n")
+				--f:write("  " .. nodeToString(v) .. "already checked\r\n")
 			end
 		end
 		
@@ -84,9 +84,9 @@ function pathfindTo(startNode,endNode)
 	
 	local endTime = love.timer.getTime()
 	local totalTime = endTime - startTime
-	f:write("took " .. totalTime .. "seconds" .. "\r\n")
-	f:write("found no path")
-	f:close()
+	--f:write("took " .. totalTime .. "seconds" .. "\r\n")
+	--f:write("found no path")
+	--f:close()
 	return {}
 end
 
