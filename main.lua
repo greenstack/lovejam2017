@@ -24,7 +24,7 @@ function love.load()
   math.randomseed(os.time())
   
   --doLevelSetupStuff(level)
-  love.audio.setVolume(.6)
+  love.audio.setVolume(0)
   playlist[1] = love.audio.newSource("resources/sound/Theme A.ogg")
   songTime[1] = 226
   playlist[2] = love.audio.newSource("resources/sound/Theme B.ogg")
@@ -134,6 +134,10 @@ function love.keypressed(key,scancode,isrepeat)
   player = getPlayer()
   if key == "space" then
     space = true
+    if win then
+      win = false
+      level = 0
+    end
 	elseif key == "w" then
 		up = true
 	elseif key == "s" then
@@ -248,7 +252,8 @@ function love.draw()
     love.graphics.rectangle("fill", 10,10,780,580)
     
      love.graphics.reset()
-    love.graphics.draw(winimg,200,100)
+    love.graphics.draw(winImage,125,100)
+    love.graphics.print("Press Space to Restart.", 325,300)
   end
 end
 
