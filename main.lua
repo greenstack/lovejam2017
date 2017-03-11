@@ -19,8 +19,7 @@ last_level = 1
 nextLevel = false
 
 function love.load()
-  logoImage = love.graphics.newImage("resources/images/logo.png");
-  winImage = love.graphics.newImage("resources/images/winimg.png")
+  
   love.math.setRandomSeed(os.time())
   math.randomseed(os.time())
   
@@ -39,6 +38,7 @@ function love.load()
     love.audio.stop()
     love.audio.play(playlist[songIndex]) 
   
+  screens.initialize()
 end
 
 function doLevelSetupStuff(level)
@@ -128,7 +128,6 @@ function love.update(dt)
       end
     end
   end
-
 end
 
 function love.keypressed(key,scancode,isrepeat)
