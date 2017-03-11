@@ -177,14 +177,9 @@ function love.draw()
     local playerScreenPos = worldToScreenPos(player.x,player.y,mapX,mapY,tileSize)
     local companion = getCompanion()
     local companionScreenPos = worldToScreenPos(companion.x,companion.y,mapX,mapY,tileSize)
-    love.graphics.setColor(0,0,0)
-    love.graphics.print("FPS: "..love.timer.getFPS(), 10, 20)
-    --love.graphics.print("MapX: "..mapX, 10, 30)
-    --love.graphics.print("MapY: "..mapY, 10, 40)
-    love.graphics.print("PlayerNode: (" .. getPlayer().nodeX .. "," .. getPlayer().nodeY .. ")", 10, 30)
-    love.graphics.print("Tile ID: ".. isOnNode(getNodes(),player).tile, 10,60)
-    --love.graphics.print("Node Type: "..isOnNode(getNodes(), player).type, 10,70)
-    --love.graphics.print("PlayerIceCream: "..tostring(player.iceCream), 10, 80)
+
+    screens.drawDebugInfo()
+
     love.graphics.setColor(200,200,200,100)
     local visibleNodes = getVisibleNodes()
     local companionHidden = false
@@ -196,8 +191,6 @@ function love.draw()
       local shadowId = getShadowId(v, hiddenNodes)
       local shadowIndex = getShadowIndex(shadowId)
       love.graphics.draw(tilesetImage,tileQuads[shadowIndex],sp.x,sp.y)
-      --love.graphics.print(shadowIndex, sp.x, sp.y)
-      --love.graphics.print(tostring(companionHidden),10,90)
     end
     
     love.graphics.reset()

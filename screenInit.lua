@@ -30,3 +30,14 @@ function screens.drawStartScreen()
   love.graphics.print("Your companion might like you better if you give him his favorite treat, ice cream",100,360)
   love.graphics.print("You might be able to buy some from the mysterious person at the shop",100,390)
 end
+
+function screens.drawDebugInfo()
+  --love.graphics.setColor(0,0,0)
+  --love.graphics.print("FPS: "..love.timer.getFPS(), 10, 20)
+  --love.graphics.print("MapX: "..mapX, 10, 30)
+  --love.graphics.print("MapY: "..mapY, 10, 40)
+  --love.graphics.print("PlayerNode: (" .. getPlayer().nodeX .. "," .. getPlayer().nodeY .. ")", 10, 30)
+  --love.graphics.print("Tile ID: ".. isOnNode(getNodes(),player).tile, 10,60)
+  --love.graphics.print("Node Type: "..isOnNode(getNodes(), player).type, 10,70)
+  --love.graphics.print("PlayerIceCream: "..tostring(player.iceCream), 10, 80)
+end

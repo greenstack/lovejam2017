@@ -24,8 +24,7 @@ function drawUI()
     local r = 255 - math.min(255,obedience_meter*255/50)
     local g = math.min(255,obedience_meter*255/50)
     local b = 0
-
-
+    
     love.graphics.setColor(0,0,0)
     love.graphics.rectangle("fill",100,4,100*6,10,10,10)
     love.graphics.setColor(r, g, b)
@@ -73,7 +72,6 @@ function drawUI()
       end
       love.graphics.arc("fill",ix + bubbleWidth / 4, iy - bubbleHeight / 2 - verticalBuffer - 2,pieRadius,0, (getInteraction().progress / getInteraction().duration ) * (2 * math.pi))
     
-      
     end
   elseif lost then
     love.graphics.setColor(10,10,10)
@@ -88,19 +86,11 @@ function drawUI()
     love.graphics.rectangle("fill",windowX / 2 - 80, windowY / 2 - 40,160,80,20,20)
     love.graphics.setColor(200,200,200)
     love.graphics.print("Level " .. level,windowX / 2 - 70, windowY / 2 - 30 / 2,0,2,2)
-    
-    
   end
-  
-  
-  
-  
 end
 
 function updateUI()
 	if obedience_meter < 2 then
 		lose()
-		
 	end
-
 end
