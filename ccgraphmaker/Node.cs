@@ -21,14 +21,29 @@ namespace ccGraphMaker
             this.x = x;
         }
 
+        public int getX()
+        {
+            return x;
+        }
+
         public void setY(int y)
         {
             this.y = y;
         }
 
+        public int getY()
+        {
+            return y;
+        }
+
         public void connectNode(Node n)
         {
             connectedNodes.Add(n);
+        }
+
+        public void connectNodes(List<Node> nodes)
+        {
+            connectedNodes.AddRange(nodes);
         }
 
         public override string ToString()

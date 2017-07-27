@@ -50,17 +50,17 @@ namespace ccGraphMaker
                 sb.Append("    " + node.ToString() + ",\n");
             }
             sb.Append("  },\n");
-            sb.Append("  nodes = {");
+            sb.Append("  nodes = {\n");
             //Insert all the nodes
             foreach (Node n in choiceNodes)
             {
-                sb.Append("{\n      n=" + n.ToString() + ",\n");
-                sb.Append("      ct = " + n.getCNodes().Count + ",\n      ts={");
-                foreach (Node c in choiceNodes)
+                sb.Append("    {\n      n=" + n.ToString() + ",\n");
+                sb.Append("      ct = " + n.getCNodes().Count + ",\n      ts={\n");
+                foreach (Node c in n.getCNodes())
                 {
                     sb.Append("        " + c.ToString() + ",\n");
                 }
-                sb.Append("      }\n    },");
+                sb.Append("      }\n    },\n");
             }
             sb.Append("  }\n}\n");
 
