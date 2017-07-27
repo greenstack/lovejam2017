@@ -2,3 +2,11 @@
 *.*~
 todo.txt
 *.kra
+
+# Ignore executables
+*.exe
+*.love
+
+# Ignore csv files, since those are only to be used by ccGraphMaker
+# to generate the levelX_pathing.lua files.
+*.csv
